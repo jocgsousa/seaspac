@@ -1,6 +1,6 @@
 const path = require("path");
 const Store = require("electron-store");
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const isDev = require("electron-is-dev");
 const store = new Store();
 
@@ -13,6 +13,8 @@ function createWindow() {
     icon: path.resolve(__dirname, "favicon.ico"),
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 
@@ -34,6 +36,10 @@ function createWindow() {
     win.show();
   });
 }
+
+ipcMain.once("api", (args, event) => {
+  event.returnvalue = store.get("api");
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

@@ -11,10 +11,19 @@ import {
   ButtonConfig,
 } from "./styles";
 
-export default class Login extends Component {
-  state = {};
+const ipc = window.require("electron").ipcRenderer;
 
-  componentDidMount() {}
+export default class Login extends Component {
+  state = {
+    usuario: null,
+    senha: null,
+    api: "",
+  };
+
+  componentDidMount() {
+    const api = ipc.sendSync("api", true);
+    console.log(api);
+  }
 
   handleLogin = (event) => {
     event.preventDefault();
@@ -22,6 +31,7 @@ export default class Login extends Component {
   };
 
   render() {
+    const { usuario, senha } = this.state;
     return (
       <Container>
         <ButtonConfig type="button">
@@ -32,8 +42,20 @@ export default class Login extends Component {
             <h2>SEASPAC - LOGIN</h2>
           </HeaderForm>
           <BodyForm>
-            <Input type="text" required />
-            <Input type="password" required />
+            <Input
+              type="text"
+              required
+              placeholder="Usuário"
+              value={usuario}
+              onChange={(e) => this.setState({ usuario: e.target.value })}
+            />
+            <Input
+              type="password"
+              required
+              placeholder="Senha"
+              value={senha}
+              onChange={(e) => this.setState({ senha: e.target.value })}
+            />
           </BodyForm>
           <FooterForm>
             <ButtonSubmit type="submit">Entrar</ButtonSubmit>
