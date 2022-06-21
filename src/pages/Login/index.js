@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { RiSettings3Fill } from "react-icons/ri";
+import PropTypes from "prop-types";
 import {
   Container,
   Form,
@@ -11,7 +12,7 @@ import {
   ButtonConfig,
 } from "./styles";
 
-const ipc = window.require("electron").ipcRenderer;
+// const ipc = window.require("electron").ipcRenderer;
 
 export default class Login extends Component {
   state = {
@@ -20,10 +21,7 @@ export default class Login extends Component {
     api: "",
   };
 
-  componentDidMount() {
-    const api = ipc.sendSync("api", true);
-    console.log(api);
-  }
+  componentDidMount() {}
 
   handleLogin = (event) => {
     event.preventDefault();
@@ -32,14 +30,25 @@ export default class Login extends Component {
 
   render() {
     const { usuario, senha } = this.state;
+    const { page } = this.props;
+
     return (
       <Container>
-        <ButtonConfig type="button">
-          <RiSettings3Fill size={20} color="#333" />
+        <ButtonConfig
+          type="button"
+          onClick={() =>
+            page({
+              login: false,
+              home: false,
+              config: true,
+            })
+          }
+        >
+          <RiSettings3Fill size={20} />
         </ButtonConfig>
         <Form onSubmit={this.handleLogin}>
           <HeaderForm>
-            <h2>SEASPAC - LOGIN</h2>
+            <h2>LOGIN</h2>
           </HeaderForm>
           <BodyForm>
             <Input
@@ -65,3 +74,7 @@ export default class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  page: PropTypes.func.isRequired,
+};

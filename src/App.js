@@ -24,9 +24,9 @@ export default class App extends Component {
 
     return (
       <>
-        {login && <Login />}
-        {home && <Home />}
-        {config && <Config />}
+        {login && <Login page={this.handlePage} />}
+        {home && <Home page={this.handlePage} />}
+        {config && <Config page={this.handlePage} />}
       </>
     );
   }

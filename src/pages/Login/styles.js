@@ -73,11 +73,13 @@ export const ButtonConfig = styled.button`
   right: 0;
   margin-top: 20px;
   margin-right: 20px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0);
+  color: white;
 
   transition: all 0.3s;
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
   }
 `;

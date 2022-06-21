@@ -37,8 +37,12 @@ function createWindow() {
   });
 }
 
-ipcMain.once("api", (args, event) => {
-  event.returnvalue = store.get("api");
+ipcMain.on("api", (args, event) => {
+  const api = store.get("api");
+
+  console.log(api);
+
+  event.returnValue = api || "";
 });
 
 // This method will be called when Electron has finished
