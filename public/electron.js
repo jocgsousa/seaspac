@@ -1,13 +1,16 @@
 const path = require("path");
-
+const Store = require("electron-store");
 const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
+const store = new Store();
 
 function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
+    icon: path.resolve(__dirname, "favicon.ico"),
     webPreferences: {
       nodeIntegration: true,
     },
@@ -26,6 +29,10 @@ function createWindow() {
   if (isDev) {
     win.webContents.openDevTools({ mode: "detach" });
   }
+
+  win.once("ready-to-show", () => {
+    win.show();
+  });
 }
 
 // This method will be called when Electron has finished
