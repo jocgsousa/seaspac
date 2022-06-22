@@ -3,6 +3,7 @@ import { RiSettings3Fill } from "react-icons/ri";
 import PropTypes from "prop-types";
 import { ClassicSpinner } from "react-spinners-kit";
 import axios from "axios";
+import { toast } from "react-toastify";
 import {
   Container,
   Form,
@@ -18,11 +19,9 @@ import {
 
 export default class Login extends Component {
   state = {
-    username: null,
-    senha: null,
-    api: "",
+    username: "",
+    password: "",
     loading: false,
-    errorApi: false,
   };
 
   componentDidMount() {}
@@ -34,7 +33,7 @@ export default class Login extends Component {
     event.preventDefault();
 
     // GET API
-    const api = localStorage.getItem("api");
+    const api = JSON.parse(localStorage.getItem("api")) || false;
     const { username, password } = this.state;
     if (api) {
       this.setState({
@@ -47,37 +46,72 @@ export default class Login extends Component {
       };
 
       await axios
-        .post(`${api.url}/session`, data)
+        .post(`${api.api}/session`, data)
         .then((response) => {
           localStorage.setItem("credentials", JSON.stringify(response.data));
 
-          page({
-            login: false,
-            home: true,
-            config: false,
-          });
+          if (response.data.user.root) {
+            page({
+              login: false,
+              home: false,
+              config: false,
+              base: true,
+            });
+          } else {
+            page({
+              login: false,
+              home: true,
+              config: false,
+              base: false,
+            });
+          }
         })
         .catch((err) => {
           if (err.response.data) {
-            window.alert(err.response.data);
+            toast.error(err.response.data.error, {
+              position: "bottom-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           } else {
-            window.alert("Falha de conexão");
+            toast.warn("Falha de conexão", {
+              position: "bottom-left",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+            });
           }
         });
       this.setState({
         loading: false,
       });
     } else {
-      this.setState({
-        errorApi: true,
+      toast.warn("Sem dados de API", {
+        position: "bottom-left",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
       });
     }
   };
 
   render() {
-    const { username, senha, loading, errorApi } = this.state;
+    const { username, password, loading } = this.state;
     const { page } = this.props;
-
+    document.title = "SEASPAC - LOGIN";
     return (
       <Container>
         <ButtonConfig
@@ -94,7 +128,7 @@ export default class Login extends Component {
         </ButtonConfig>
 
         {loading ? (
-          <ClassicSpinner size={40} color="white" />
+          <ClassicSpinner size={35} color="#fff" />
         ) : (
           <Form onSubmit={this.handleLogin}>
             <HeaderForm>
@@ -112,13 +146,12 @@ export default class Login extends Component {
                 type="password"
                 required
                 placeholder="Senha"
-                value={senha}
-                onChange={(e) => this.setState({ senha: e.target.value })}
+                value={password}
+                onChange={(e) => this.setState({ password: e.target.value })}
               />
             </BodyForm>
             <FooterForm>
               <ButtonSubmit type="submit">Entrar</ButtonSubmit>
-              {errorApi && <h3>SEM API</h3>}
             </FooterForm>
           </Form>
         )}

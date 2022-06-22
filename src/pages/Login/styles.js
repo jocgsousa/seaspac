@@ -43,6 +43,12 @@ export const FooterForm = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
+
+  h3 {
+    margin-top: 20px;
+    color: #cc0000;
+    font-size: 15px;
+  }
 `;
 
 export const Input = styled.input`

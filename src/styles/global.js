@@ -18,7 +18,7 @@ export default createGlobalStyle`
     body{
         font-family: 'Roboto';
         -webkit-font-smoothing: antialiased !important;
-        background-color: #1f4366;
+        background-color: #a8c9f8;
     }
   
 `;
