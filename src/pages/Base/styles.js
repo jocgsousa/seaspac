@@ -31,7 +31,6 @@ export const Button = styled.button`
   justify-content: flex-start;
   cursor: pointer;
   padding-left: 10px;
-  /* border: 1px solid #ccc; */
 `;
 
 export const Line = styled.div`
@@ -75,6 +74,10 @@ export const Section = styled.div`
   cursor: pointer;
   padding-left: 10px;
   font-size: 11px;
+
+  &:hover {
+    background-color: #ddd;
+  }
 `;
 
 export const Close = styled.button.attrs({
