@@ -6,6 +6,7 @@ import {
   MdArrowDropDown,
   MdArrowDropUp,
   MdSupervisorAccount,
+  MdAdd,
 } from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -31,6 +32,7 @@ export default class Base extends Component {
     newproject: false,
     sections: [],
     name: "",
+    nameSection: "",
   };
 
   componentDidMount() {
@@ -127,18 +129,25 @@ export default class Base extends Component {
   };
 
   handlwHideSection = (index) => {
-    const divUp = document.getElementById(`opUp${index}`);
-    const div = document.getElementById(`dep${index}`);
-    divUp.style.display = "none";
-    div.style.height = "0px";
+    document.getElementById(`opUp${index}`).style.display = "none";
+    document.getElementById(`dep${index}`).style.height = "0px";
 
-    const divDown = document.getElementById(`opDown${index}`);
-    divDown.style.display = "block";
+    document.getElementById(`opDown${index}`).style.display = "block";
+    document.getElementById(`newSection${index}`).style.display = "none";
+  };
+
+  handleNewSectionDep = (index) => {
+    document.getElementById(`dep${index}`).style.height = "300px";
+
+    document.getElementById(`opDown${index}`).style.display = "none";
+    document.getElementById(`opUp${index}`).style.display = "block";
+
+    document.getElementById(`newSection${index}`).style.display = "block";
   };
 
   render() {
     document.title = "SEASPAC - HOMEBASE";
-    const { newproject, sections, name } = this.state;
+    const { newproject, sections, name, nameSection } = this.state;
 
     return (
       <Container>
@@ -153,10 +162,26 @@ export default class Base extends Component {
           >
             <h2>Estrutura</h2>
 
-            <Button onClick={() => this.setState({ newproject: !newproject })}>
+            <Button>
               <Line width={1} height={15} top={15} />
-              <Line width={30} height={1} />
-              <FcAddDatabase size={20} /> <span> Novo projeto/setor </span>
+              <Line
+                width={37}
+                height={1}
+                left={0}
+                style={{ position: "absolute" }}
+              />
+              <FcAddDatabase size={20} style={{ marginLeft: "-14%" }} />
+              <span
+                onClick={() => this.setState({ newproject: !newproject })}
+                style={{ marginLeft: "-25%" }}
+              >
+                Novo projeto/setor
+              </span>
+              <DivOp>
+                <Op>
+                  <MdSupervisorAccount size={15} />
+                </Op>
+              </DivOp>
             </Button>
             {newproject && (
               <FormNewProject onSubmit={this.handleSaveNewDep}>
@@ -191,11 +216,15 @@ export default class Base extends Component {
                 >
                   <Section>
                     <Line width={1} height={30} top={0} />
-                    <Line width={30} height={1} />
+                    <Line width={40} height={1} />
                     <FcDatabase size={20} />
                     <span>{s.name}</span>
 
                     <DivOp>
+                      <Op onClick={() => this.handleNewSectionDep(index)}>
+                        <MdAdd size={15} />
+                      </Op>
+
                       <Op>
                         <MdSupervisorAccount size={15} />
                       </Op>
@@ -215,7 +244,36 @@ export default class Base extends Component {
                       </Op>
                     </DivOp>
                   </Section>
-                  <SectionsDep id={`dep${index}`}></SectionsDep>
+                  <SectionsDep id={`dep${index}`}>
+                    <div id={`newSection${index}`} style={{ display: "none" }}>
+                      <FormNewProject onSubmit={this.handleSaveNewDep}>
+                        <Input
+                          autoFocus
+                          required
+                          value={nameSection}
+                          onChange={(e) =>
+                            this.setState({
+                              nameSection: String(e.target.value).toUpperCase(),
+                            })
+                          }
+                        />
+                        <Save type="submit">
+                          <MdCheck size={20} color="#fff" />
+                        </Save>
+                        <Close
+                          type="button"
+                          onClick={() => {
+                            this.setState({ nameSection: "" });
+                            document.getElementById(
+                              `newSection${index}`
+                            ).style.display = "none";
+                          }}
+                        >
+                          <MdClose size={20} color="#fff" />
+                        </Close>
+                      </FormNewProject>
+                    </div>
+                  </SectionsDep>
                 </div>
               ))}
             </ListSections>

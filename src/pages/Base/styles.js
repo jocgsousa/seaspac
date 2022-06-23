@@ -28,15 +28,19 @@ export const Button = styled.button`
   min-height: 30px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  cursor: pointer;
+  justify-content: space-between;
   padding-left: 10px;
+
+  span {
+    cursor: pointer;
+  }
 `;
 
 export const Line = styled.div`
   width: ${(props) => `${props.width}px`};
   height: ${(props) => `${props.height}px`};
   margin-top: ${(props) => `${props.top}px`};
+  margin-left: ${(props) => `${props.left}px`};
   background: #333;
 `;
 
@@ -143,7 +147,7 @@ export const Op = styled.button.attrs({
   display: flex;
   align-items: center;
   justify-content: center;
-
+  cursor: pointer;
   &:active {
     background-color: #ccc;
   }
