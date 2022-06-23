@@ -22,7 +22,9 @@ export const Col = styled.div`
 `;
 
 export const Button = styled.button`
-  width: 100%;
+  /* width: 100%; */
+  width: 317px;
+
   background: transparent;
   border: none;
   min-height: 30px;
@@ -59,7 +61,7 @@ export const FormNewProject = styled.form`
   padding-left: 10px;
 `;
 
-export const ListSections = styled.div`
+export const ListDeps = styled.div`
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
@@ -67,7 +69,7 @@ export const ListSections = styled.div`
   padding-bottom: 50px;
 `;
 
-export const Section = styled.div`
+export const Dep = styled.div`
   width: 100%;
   background: transparent;
   border: none;
@@ -164,3 +166,18 @@ export const SectionsDep = styled.div`
   margin-left: 10px;
   transition: 0.2s all;
 `;
+
+export const Loading = styled.div`
+  width: 317px;
+  display: flex;
+  min-height: 85vh;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ListSections = styled.div`
+  min-height: 200px;
+  border: 1px solid red;
+`;
+
+export const Section = styled.div``;

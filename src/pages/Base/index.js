@@ -7,7 +7,9 @@ import {
   MdArrowDropUp,
   MdSupervisorAccount,
   MdAdd,
+  MdSync,
 } from "react-icons/md";
+import { ClassicSpinner } from "react-spinners-kit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import {
@@ -18,13 +20,16 @@ import {
   Line,
   Input,
   FormNewProject,
-  Section,
+  Dep,
   Close,
   Save,
-  ListSections,
+  ListDeps,
   DivOp,
   Op,
   SectionsDep,
+  Loading,
+  ListSections,
+  Section,
 } from "./styles";
 
 export default class Base extends Component {
@@ -33,6 +38,8 @@ export default class Base extends Component {
     sections: [],
     name: "",
     nameSection: "",
+    loading: false,
+    firstLoading: true,
   };
 
   componentDidMount() {
@@ -52,6 +59,8 @@ export default class Base extends Component {
       .then((response) => {
         this.setState({
           sections: response.data,
+          loading: false,
+          firstLoading: false,
         });
       })
       .catch((error) => {
@@ -65,6 +74,11 @@ export default class Base extends Component {
           draggable: true,
           progress: undefined,
           theme: "dark",
+        });
+
+        this.setState({
+          loading: false,
+          firstLoading: false,
         });
       });
   };
@@ -147,13 +161,14 @@ export default class Base extends Component {
 
   render() {
     document.title = "SEASPAC - HOMEBASE";
-    const { newproject, sections, name, nameSection } = this.state;
+    const { newproject, sections, name, nameSection, loading, firstLoading } =
+      this.state;
 
     return (
       <Container>
         <Row flexDirection="row">
           <Col
-            size={1.8}
+            size={1.5}
             minHeight="100vh"
             alignItems="center"
             justifyContent="flex-start"
@@ -179,7 +194,17 @@ export default class Base extends Component {
               </span>
               <DivOp>
                 <Op>
-                  <MdSupervisorAccount size={15} />
+                  {loading ? (
+                    <ClassicSpinner size={10} color="#333" />
+                  ) : (
+                    <MdSync
+                      size={15}
+                      onClick={() => {
+                        this.handleListDeps();
+                        this.setState({ loading: true });
+                      }}
+                    />
+                  )}
                 </Op>
               </DivOp>
             </Button>
@@ -206,77 +231,97 @@ export default class Base extends Component {
                 </Close>
               </FormNewProject>
             )}
-            <ListSections>
-              {sections.map((s, index) => (
-                <div
-                  styled={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Section>
-                    <Line width={1} height={30} top={0} />
-                    <Line width={40} height={1} />
-                    <FcDatabase size={20} />
-                    <span>{s.name}</span>
 
-                    <DivOp>
-                      <Op onClick={() => this.handleNewSectionDep(index)}>
-                        <MdAdd size={15} />
-                      </Op>
+            {firstLoading ? (
+              <Loading>
+                <ClassicSpinner size={20} color="#333" />
+              </Loading>
+            ) : (
+              <ListDeps>
+                {sections.map((s, index) => (
+                  <div
+                    styled={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <Dep>
+                      <Line width={1} height={30} top={0} />
+                      <Line width={40} height={1} />
+                      <FcDatabase size={20} />
+                      <span>{s.name}</span>
 
-                      <Op>
-                        <MdSupervisorAccount size={15} />
-                      </Op>
-                      <Op
-                        id={`opDown${index}`}
-                        onClick={() => this.handleShowSections(index)}
-                      >
-                        <MdArrowDropDown size={15} />
-                      </Op>
+                      <DivOp>
+                        <Op onClick={() => this.handleNewSectionDep(index)}>
+                          <MdAdd size={15} />
+                        </Op>
 
-                      <Op
-                        style={{ display: "none" }}
-                        id={`opUp${index}`}
-                        onClick={() => this.handlwHideSection(index)}
-                      >
-                        <MdArrowDropUp size={15} />
-                      </Op>
-                    </DivOp>
-                  </Section>
-                  <SectionsDep id={`dep${index}`}>
-                    <div id={`newSection${index}`} style={{ display: "none" }}>
-                      <FormNewProject onSubmit={this.handleSaveNewDep}>
-                        <Input
-                          autoFocus
-                          required
-                          value={nameSection}
-                          onChange={(e) =>
-                            this.setState({
-                              nameSection: String(e.target.value).toUpperCase(),
-                            })
-                          }
-                        />
-                        <Save type="submit">
-                          <MdCheck size={20} color="#fff" />
-                        </Save>
-                        <Close
-                          type="button"
-                          onClick={() => {
-                            this.setState({ nameSection: "" });
-                            document.getElementById(
-                              `newSection${index}`
-                            ).style.display = "none";
-                          }}
+                        <Op>
+                          <MdSupervisorAccount size={15} />
+                        </Op>
+                        <Op
+                          id={`opDown${index}`}
+                          onClick={() => this.handleShowSections(index)}
                         >
-                          <MdClose size={20} color="#fff" />
-                        </Close>
-                      </FormNewProject>
-                    </div>
-                  </SectionsDep>
-                </div>
-              ))}
-            </ListSections>
+                          <MdArrowDropDown size={15} />
+                        </Op>
+
+                        <Op
+                          style={{ display: "none" }}
+                          id={`opUp${index}`}
+                          onClick={() => this.handlwHideSection(index)}
+                        >
+                          <MdArrowDropUp size={15} />
+                        </Op>
+                      </DivOp>
+                    </Dep>
+                    <SectionsDep id={`dep${index}`}>
+                      <div
+                        id={`newSection${index}`}
+                        style={{ display: "none" }}
+                      >
+                        <FormNewProject onSubmit={this.handleSaveNewDep}>
+                          <Input
+                            autoFocus
+                            required
+                            value={nameSection}
+                            onChange={(e) =>
+                              this.setState({
+                                nameSection: String(
+                                  e.target.value
+                                ).toUpperCase(),
+                              })
+                            }
+                          />
+                          <Save type="submit">
+                            <MdCheck size={20} color="#fff" />
+                          </Save>
+                          <Close
+                            type="button"
+                            onClick={() => {
+                              this.setState({ nameSection: "" });
+                              document.getElementById(
+                                `newSection${index}`
+                              ).style.display = "none";
+                            }}
+                          >
+                            <MdClose size={20} color="#fff" />
+                          </Close>
+                        </FormNewProject>
+                      </div>
+
+                      <ListSections>
+                        {s.secoes.map((section) => (
+                          <Section>
+                            <span>{section.title}</span>
+                          </Section>
+                        ))}
+                      </ListSections>
+                    </SectionsDep>
+                  </div>
+                ))}
+              </ListDeps>
+            )}
           </Col>
 
           <Col size={10} minHeight="100vh" backgroundColor="#ccc">
