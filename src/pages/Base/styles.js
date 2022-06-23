@@ -71,12 +71,24 @@ export const Section = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  cursor: pointer;
+  /* cursor: pointer; */
   padding-left: 10px;
   font-size: 11px;
-
+  /* border: 1px solid red; */
   &:hover {
     background-color: #ddd;
+  }
+
+  span {
+    white-space: nowrap;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
   }
 `;
 
@@ -111,4 +123,40 @@ export const Save = styled.button`
   &:active {
     background-color: #047e55;
   }
+`;
+
+export const DivOp = styled.div`
+  margin-left: 20px;
+  display: flex;
+  flex-direction: row;
+`;
+
+export const Op = styled.button.attrs({
+  type: "button",
+})`
+  margin-right: 20px;
+  width: 20px;
+  height: 20px;
+  position: relative;
+  border: 1px solid #ccc;
+  color: #777;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:active {
+    background-color: #ccc;
+  }
+`;
+
+export const SectionsDep = styled.div`
+  /* display: none; */
+  min-height: 0px;
+  max-height: 400px;
+  height: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-left: 1px solid #333;
+  margin-left: 10px;
+  transition: 0.2s all;
 `;

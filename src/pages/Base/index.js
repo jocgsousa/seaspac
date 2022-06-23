@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { FcAddDatabase, FcDatabase } from "react-icons/fc";
-import { MdClose, MdCheck } from "react-icons/md";
+import {
+  MdClose,
+  MdCheck,
+  MdArrowDropDown,
+  MdArrowDropUp,
+  MdSupervisorAccount,
+} from "react-icons/md";
 import axios from "axios";
 import { toast } from "react-toastify";
 import {
@@ -15,6 +21,9 @@ import {
   Close,
   Save,
   ListSections,
+  DivOp,
+  Op,
+  SectionsDep,
 } from "./styles";
 
 export default class Base extends Component {
@@ -107,6 +116,26 @@ export default class Base extends Component {
       });
   };
 
+  handleShowSections = (index) => {
+    const divDown = document.getElementById(`opDown${index}`);
+    const div = document.getElementById(`dep${index}`);
+    divDown.style.display = "none";
+    div.style.height = "300px";
+
+    const divUp = document.getElementById(`opUp${index}`);
+    divUp.style.display = "block";
+  };
+
+  handlwHideSection = (index) => {
+    const divUp = document.getElementById(`opUp${index}`);
+    const div = document.getElementById(`dep${index}`);
+    divUp.style.display = "none";
+    div.style.height = "0px";
+
+    const divDown = document.getElementById(`opDown${index}`);
+    divDown.style.display = "block";
+  };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
     const { newproject, sections, name } = this.state;
@@ -115,7 +144,7 @@ export default class Base extends Component {
       <Container>
         <Row flexDirection="row">
           <Col
-            size={3}
+            size={1.8}
             minHeight="100vh"
             alignItems="center"
             justifyContent="flex-start"
@@ -131,13 +160,41 @@ export default class Base extends Component {
             </Button>
 
             <ListSections>
-              {sections.map((s) => (
-                <Section>
-                  <Line width={1} height={30} top={0} />
-                  <Line width={30} height={1} />
-                  <FcDatabase size={20} />
-                  <span>{s.name}</span>
-                </Section>
+              {sections.map((s, index) => (
+                <div
+                  styled={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Section>
+                    <Line width={1} height={30} top={0} />
+                    <Line width={30} height={1} />
+                    <FcDatabase size={20} />
+                    <span>{s.name}</span>
+
+                    <DivOp>
+                      <Op>
+                        <MdSupervisorAccount size={15} />
+                      </Op>
+                      <Op
+                        id={`opDown${index}`}
+                        onClick={() => this.handleShowSections(index)}
+                      >
+                        <MdArrowDropDown size={15} />
+                      </Op>
+
+                      <Op
+                        style={{ display: "none" }}
+                        id={`opUp${index}`}
+                        onClick={() => this.handlwHideSection(index)}
+                      >
+                        <MdArrowDropUp size={15} />
+                      </Op>
+                    </DivOp>
+                  </Section>
+                  <SectionsDep id={`dep${index}`}></SectionsDep>
+                </div>
               ))}
             </ListSections>
 
