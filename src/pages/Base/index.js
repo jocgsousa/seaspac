@@ -140,14 +140,19 @@ export default class Base extends Component {
 
     const divUp = document.getElementById(`opUp${index}`);
     divUp.style.display = "block";
+
+    document.getElementById(`child${index}`).style.display = "block";
+    document.getElementById(`listsections${index}`).style.display = "block";
   };
 
-  handlwHideSection = (index) => {
+  handleHideSection = (index) => {
     document.getElementById(`opUp${index}`).style.display = "none";
     document.getElementById(`dep${index}`).style.height = "0px";
-
-    document.getElementById(`opDown${index}`).style.display = "block";
     document.getElementById(`newSection${index}`).style.display = "none";
+    document.getElementById(`opDown${index}`).style.display = "block";
+
+    document.getElementById(`child${index}`).style.display = "none";
+    document.getElementById(`listsections${index}`).style.display = "none";
   };
 
   handleNewSectionDep = (index) => {
@@ -157,6 +162,9 @@ export default class Base extends Component {
     document.getElementById(`opUp${index}`).style.display = "block";
 
     document.getElementById(`newSection${index}`).style.display = "block";
+
+    document.getElementById(`child${index}`).style.display = "block";
+    document.getElementById(`listsections${index}`).style.display = "block";
   };
 
   render() {
@@ -248,7 +256,19 @@ export default class Base extends Component {
                     <Dep>
                       <Line width={1} height={30} top={0} />
                       <Line width={40} height={1} />
+                      <Line
+                        id={`child${index}`}
+                        width={1}
+                        height={30}
+                        top={29}
+                        style={{
+                          display: "none",
+                          position: "absolute",
+                          left: "20.5px",
+                        }}
+                      />
                       <FcDatabase size={20} />
+
                       <span>{s.name}</span>
 
                       <DivOp>
@@ -269,7 +289,7 @@ export default class Base extends Component {
                         <Op
                           style={{ display: "none" }}
                           id={`opUp${index}`}
-                          onClick={() => this.handlwHideSection(index)}
+                          onClick={() => this.handleHideSection(index)}
                         >
                           <MdArrowDropUp size={15} />
                         </Op>
@@ -310,9 +330,12 @@ export default class Base extends Component {
                         </FormNewProject>
                       </div>
 
-                      <ListSections>
+                      <ListSections id={`listsections${index}`}>
                         {s.secoes.map((section) => (
                           <Section>
+                            <Line width={0.5} height={30} top={-30} />
+                            <Line width={40} height={0.5} />
+                            <FcDatabase size={20} />
                             <span>{section.title}</span>
                           </Section>
                         ))}

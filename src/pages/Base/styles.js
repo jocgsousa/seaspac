@@ -177,7 +177,37 @@ export const Loading = styled.div`
 
 export const ListSections = styled.div`
   min-height: 200px;
-  border: 1px solid red;
+  /* border: 1px solid red; */
+  width: 100%;
+  /* margin-top: -1px; */
+  z-index: 9999999;
 `;
 
-export const Section = styled.div``;
+export const Section = styled.div`
+  width: 100%;
+  background: transparent;
+  border: none;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* cursor: pointer; */
+  padding-left: 10px;
+  font-size: 11px;
+  /* border: 1px solid red; */
+  &:hover {
+    background-color: #ddd;
+  }
+
+  span {
+    white-space: nowrap;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
+  }
+`;
