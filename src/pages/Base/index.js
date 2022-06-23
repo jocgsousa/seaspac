@@ -158,7 +158,29 @@ export default class Base extends Component {
               <Line width={30} height={1} />
               <FcAddDatabase size={20} /> <span> Novo projeto/setor </span>
             </Button>
-
+            {newproject && (
+              <FormNewProject onSubmit={this.handleSaveNewDep}>
+                <Input
+                  autoFocus
+                  required
+                  value={name}
+                  onChange={(e) =>
+                    this.setState({
+                      name: String(e.target.value).toUpperCase(),
+                    })
+                  }
+                />
+                <Save type="submit">
+                  <MdCheck size={20} color="#fff" />
+                </Save>
+                <Close
+                  type="button"
+                  onClick={() => this.setState({ name: "", newproject: false })}
+                >
+                  <MdClose size={20} color="#fff" />
+                </Close>
+              </FormNewProject>
+            )}
             <ListSections>
               {sections.map((s, index) => (
                 <div
@@ -197,26 +219,6 @@ export default class Base extends Component {
                 </div>
               ))}
             </ListSections>
-
-            {newproject && (
-              <FormNewProject onSubmit={this.handleSaveNewDep}>
-                <Input
-                  autoFocus
-                  required
-                  value={name}
-                  onChange={(e) => this.setState({ name: e.target.value })}
-                />
-                <Save type="submit">
-                  <MdCheck size={20} color="#fff" />
-                </Save>
-                <Close
-                  type="button"
-                  onClick={() => this.setState({ name: "", newproject: false })}
-                >
-                  <MdClose size={20} color="#fff" />
-                </Close>
-              </FormNewProject>
-            )}
           </Col>
 
           <Col size={10} minHeight="100vh" backgroundColor="#ccc">

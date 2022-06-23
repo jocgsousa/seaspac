@@ -57,7 +57,7 @@ export const FormNewProject = styled.form`
 
 export const ListSections = styled.div`
   width: 100%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   max-height: 93.8vh;
   padding-bottom: 50px;
@@ -134,7 +134,7 @@ export const DivOp = styled.div`
 export const Op = styled.button.attrs({
   type: "button",
 })`
-  margin-right: 20px;
+  margin-right: 5px;
   width: 20px;
   height: 20px;
   position: relative;
