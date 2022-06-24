@@ -546,6 +546,18 @@ export default class Base extends Component {
                                 }}
                               />
 
+                              <Line
+                                id={`childSection${section.id}${section.fk_dep_id}`}
+                                width={0.5}
+                                height={15}
+                                top={15}
+                                style={{
+                                  display: "block",
+                                  position: "relative",
+                                  left: "-41px",
+                                }}
+                              />
+
                               <FcDatabase size={20} />
                               <span>{section.title}</span>
                               <div
@@ -587,7 +599,7 @@ export default class Base extends Component {
                                   </Close>
                                 </FormNewProject>
                               </div>
-                              <DivOp style={{ right: "-20px", zIndex: "2" }}>
+                              <DivOp style={{ right: "-20px" }}>
                                 <Op
                                   onClick={() => {
                                     this.handleNewForm(
@@ -637,7 +649,7 @@ export default class Base extends Component {
                                 id={`newForm${section.id}${section.fk_dep_id}`}
                                 style={{
                                   display: "none",
-                                  marginTop: "15px",
+                                  marginTop: "0px",
                                   marginLeft: "0px",
                                 }}
                               >
@@ -683,7 +695,7 @@ export default class Base extends Component {
                               {section.formularios &&
                                 section.formularios.map((form) => (
                                   <Form>
-                                    <Line width={0.5} height={30} top={-30} />
+                                    <Line width={0.5} height={35} top={-35} />
                                     <Line width={40} height={0.5} />
                                     <FcDocument size={20} />
                                     <span>{form.title}</span>

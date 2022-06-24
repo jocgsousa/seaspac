@@ -65,7 +65,7 @@ export const ListDeps = styled.div`
   width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: 93.8vh;
+  max-height: 92vh;
   padding-bottom: 50px;
   margin-top: 25px;
 `;
@@ -217,7 +217,6 @@ export const Section = styled.div`
 `;
 
 export const ListForms = styled.div`
-  /* display: none; */
   min-height: 0px;
   max-height: 250px;
   height: 0px;
@@ -227,13 +226,13 @@ export const ListForms = styled.div`
   margin-left: 10px;
   transition: 0.2s all;
   min-width: 20%;
-  top: -15px;
-  z-index: 1;
+  z-index: 3;
   position: relative;
 `;
 
 export const Form = styled.div`
-  margin-top: 15px;
+  /* margin-top: 15px; */
+
   width: 100%;
   background: transparent;
   border: none;
