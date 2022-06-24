@@ -232,4 +232,32 @@ export const ListForms = styled.div`
   position: relative;
 `;
 
-export const Form = styled.div``;
+export const Form = styled.div`
+  margin-top: 15px;
+  width: 100%;
+  background: transparent;
+  border: none;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* cursor: pointer; */
+  padding-left: 10px;
+  font-size: 11px;
+  /* border: 1px solid red; */
+  &:hover {
+    background-color: #ddd;
+  }
+
+  span {
+    white-space: nowrap;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    -webkit-user-select: none; /* Chrome all / Safari all */
+    -moz-user-select: none; /* Firefox all */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none;
+  }
+`;

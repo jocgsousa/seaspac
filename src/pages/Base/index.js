@@ -44,6 +44,7 @@ export default class Base extends Component {
     loading: false,
     firstLoading: true,
     id: "",
+    idSection: "",
   };
 
   componentDidMount() {
@@ -245,20 +246,96 @@ export default class Base extends Component {
     document.getElementById(`listsections${index}`).style.display = "block";
   };
 
-  handleShowFormsSection = (sec, dep) => {
+  handleShowFormsSection = (sec, dep, formularios) => {
     document.getElementById(`forms${sec}${dep}`).style.height = "250px";
     document.getElementById(`opUpForms${sec}${dep}`).style.display = "block";
     document.getElementById(`opDownForms${sec}${dep}`).style.display = "none";
+    if (formularios.length) {
+      document.getElementById(`childSection${sec}${dep}`).style.display =
+        "block";
+    }
   };
 
   handleHideFormsSection = (sec, dep) => {
     document.getElementById(`forms${sec}${dep}`).style.height = "0px";
     document.getElementById(`opUpForms${sec}${dep}`).style.display = "none";
     document.getElementById(`opDownForms${sec}${dep}`).style.display = "block";
+    document.getElementById(`childSection${sec}${dep}`).style.display = "none";
   };
 
   handleNewForm = (sec, dep) => {
     document.getElementById(`newForm${sec}${dep}`).style.display = "block";
+  };
+
+  handleSaveNewForm = async (e) => {
+    e.preventDefault();
+    this.setState({
+      loading: true,
+    });
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    const api = JSON.parse(localStorage.getItem("api"));
+    const { nameForm, id, idSection } = this.state;
+    const data = {
+      title: nameForm,
+      fk_dep_id: id,
+      fk_section_id: idSection,
+    };
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${credentials.token}`,
+      },
+    };
+
+    await axios
+      .post(`${api.api}/form`, data, config)
+      .then((response) => {
+        toast.success(response.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        this.setState({
+          nameForm: "",
+          id: "",
+          idSection: "",
+        });
+        this.handleListDeps();
+      })
+      .catch((error) => {
+        if (error.response) {
+          toast.warn(error.response.data.error, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        } else {
+          toast.error("Falha de conexão", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
+      });
+
+    this.setState({
+      loading: false,
+    });
   };
 
   render() {
@@ -296,7 +373,7 @@ export default class Base extends Component {
               <Line width={1} height={15} top={15} />
               <Line
                 width={37}
-                height={1}
+                height={0.5}
                 left={0}
                 style={{ position: "absolute" }}
               />
@@ -369,8 +446,8 @@ export default class Base extends Component {
                     }}
                   >
                     <Dep>
-                      <Line width={1} height={30} top={0} />
-                      <Line width={40} height={1} />
+                      <Line width={0.5} height={30} top={0} />
+                      <Line width={40} height={0.5} />
                       <Line
                         id={`child${index}`}
                         width={1}
@@ -457,6 +534,18 @@ export default class Base extends Component {
                             <Section>
                               <Line width={0.5} height={30} top={-30} />
                               <Line width={40} height={0.5} />
+                              <Line
+                                id={`childSection${section.id}${section.fk_dep_id}`}
+                                width={0.5}
+                                height={15}
+                                top={15}
+                                style={{
+                                  display: "none",
+                                  position: "relative",
+                                  left: "-29.5px",
+                                }}
+                              />
+
                               <FcDatabase size={20} />
                               <span>{section.title}</span>
                               <div
@@ -500,12 +589,17 @@ export default class Base extends Component {
                               </div>
                               <DivOp style={{ right: "-20px", zIndex: "2" }}>
                                 <Op
-                                  onClick={() =>
+                                  onClick={() => {
                                     this.handleNewForm(
                                       section.id,
                                       section.fk_dep_id
-                                    )
-                                  }
+                                    );
+
+                                    this.handleShowFormsSection(
+                                      section.id,
+                                      section.fk_dep_id
+                                    );
+                                  }}
                                   style={{ border: "none" }}
                                 >
                                   <FcDocument size={20} />
@@ -515,7 +609,8 @@ export default class Base extends Component {
                                   onClick={() =>
                                     this.handleShowFormsSection(
                                       section.id,
-                                      section.fk_dep_id
+                                      section.fk_dep_id,
+                                      section.formularios
                                     )
                                   }
                                 >
@@ -542,15 +637,18 @@ export default class Base extends Component {
                                 id={`newForm${section.id}${section.fk_dep_id}`}
                                 style={{
                                   display: "none",
-                                  marginTop: "20px",
-                                  marginLeft: "-11px",
+                                  marginTop: "15px",
+                                  marginLeft: "0px",
                                 }}
                               >
-                                {/* Added new Section in Department or Section */}
+                                {/* Added new form in section */}
                                 <FormNewProject
-                                  onSubmit={this.handleSaveNewSection}
+                                  onSubmit={this.handleSaveNewForm}
                                   onSubmitCapture={() =>
-                                    this.setState({ id: s.id })
+                                    this.setState({
+                                      idSection: section.id,
+                                      id: s.id,
+                                    })
                                   }
                                 >
                                   <Input
@@ -585,6 +683,9 @@ export default class Base extends Component {
                               {section.formularios &&
                                 section.formularios.map((form) => (
                                   <Form>
+                                    <Line width={0.5} height={30} top={-30} />
+                                    <Line width={40} height={0.5} />
+                                    <FcDocument size={20} />
                                     <span>{form.title}</span>
                                   </Form>
                                 ))}
