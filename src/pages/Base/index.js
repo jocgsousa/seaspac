@@ -40,6 +40,7 @@ export default class Base extends Component {
     nameSection: "",
     loading: false,
     firstLoading: true,
+    id: "",
   };
 
   componentDidMount() {
@@ -85,6 +86,9 @@ export default class Base extends Component {
 
   handleSaveNewDep = async (e) => {
     e.preventDefault();
+    this.setState({
+      loading: true,
+    });
     const credentials = JSON.parse(localStorage.getItem("credentials"));
     const api = JSON.parse(localStorage.getItem("api"));
     const { name } = this.state;
@@ -118,8 +122,77 @@ export default class Base extends Component {
         this.handleListDeps();
       })
       .catch((error) => {
+        if (error.response) {
+          toast.warn(error.response.data.error, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        } else {
+          toast.error("Falha de conexão", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        }
+      });
+
+    this.setState({
+      loading: false,
+    });
+  };
+
+  handleSaveNewSection = async (e) => {
+    e.preventDefault();
+    const { id } = this.state;
+
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    const api = JSON.parse(localStorage.getItem("api"));
+    const { nameSection } = this.state;
+    const data = {
+      title: nameSection,
+      data: "",
+      fk_dep_id: id,
+    };
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${credentials.token}`,
+      },
+    };
+
+    await axios
+      .post(`${api.api}/section`, data, config)
+      .then((response) => {
+        toast.success(response.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+        this.setState({
+          name: "",
+          newproject: false,
+        });
+        this.handleListDeps();
+      })
+      .catch((error) => {
         console.log(error);
-        toast.warn(error.response.data.error, {
+        toast.warn(error.response.data.message, {
           position: "bottom-left",
           autoClose: 5000,
           hideProgressBar: false,
@@ -131,8 +204,7 @@ export default class Base extends Component {
         });
       });
   };
-
-  handleShowSections = (index) => {
+  handleShowSections = (index, s) => {
     const divDown = document.getElementById(`opDown${index}`);
     const div = document.getElementById(`dep${index}`);
     divDown.style.display = "none";
@@ -141,7 +213,10 @@ export default class Base extends Component {
     const divUp = document.getElementById(`opUp${index}`);
     divUp.style.display = "block";
 
-    document.getElementById(`child${index}`).style.display = "block";
+    if (s.secoes.length) {
+      document.getElementById(`child${index}`).style.display = "block";
+    }
+
     document.getElementById(`listsections${index}`).style.display = "block";
   };
 
@@ -176,7 +251,7 @@ export default class Base extends Component {
       <Container>
         <Row flexDirection="row">
           <Col
-            size={1.5}
+            size={2}
             minHeight="100vh"
             alignItems="center"
             justifyContent="flex-start"
@@ -185,7 +260,13 @@ export default class Base extends Component {
           >
             <h2>Estrutura</h2>
 
-            <Button>
+            <Button
+              style={{
+                position: "absolute",
+                left: 0,
+                top: "30px",
+              }}
+            >
               <Line width={1} height={15} top={15} />
               <Line
                 width={37}
@@ -193,7 +274,7 @@ export default class Base extends Component {
                 left={0}
                 style={{ position: "absolute" }}
               />
-              <FcAddDatabase size={20} style={{ marginLeft: "-14%" }} />
+              <FcAddDatabase size={20} style={{ marginLeft: "-18%" }} />
               <span
                 onClick={() => this.setState({ newproject: !newproject })}
                 style={{ marginLeft: "-25%" }}
@@ -201,7 +282,12 @@ export default class Base extends Component {
                 Novo projeto/setor
               </span>
               <DivOp>
-                <Op>
+                <Op
+                  style={{
+                    position: "relative",
+                    left: "-20px",
+                  }}
+                >
                   {loading ? (
                     <ClassicSpinner size={10} color="#333" />
                   ) : (
@@ -216,29 +302,6 @@ export default class Base extends Component {
                 </Op>
               </DivOp>
             </Button>
-            {newproject && (
-              <FormNewProject onSubmit={this.handleSaveNewDep}>
-                <Input
-                  autoFocus
-                  required
-                  value={name}
-                  onChange={(e) =>
-                    this.setState({
-                      name: String(e.target.value).toUpperCase(),
-                    })
-                  }
-                />
-                <Save type="submit">
-                  <MdCheck size={20} color="#fff" />
-                </Save>
-                <Close
-                  type="button"
-                  onClick={() => this.setState({ name: "", newproject: false })}
-                >
-                  <MdClose size={20} color="#fff" />
-                </Close>
-              </FormNewProject>
-            )}
 
             {firstLoading ? (
               <Loading>
@@ -246,6 +309,32 @@ export default class Base extends Component {
               </Loading>
             ) : (
               <ListDeps>
+                {newproject && (
+                  <FormNewProject onSubmit={this.handleSaveNewDep}>
+                    <Input
+                      autoFocus
+                      required
+                      value={name}
+                      onChange={(e) =>
+                        this.setState({
+                          name: String(e.target.value).toUpperCase(),
+                        })
+                      }
+                    />
+                    <Save type="submit">
+                      <MdCheck size={20} color="#fff" />
+                    </Save>
+                    <Close
+                      type="button"
+                      onClick={() =>
+                        this.setState({ name: "", newproject: false })
+                      }
+                    >
+                      <MdClose size={20} color="#fff" />
+                    </Close>
+                  </FormNewProject>
+                )}
+
                 {sections.map((s, index) => (
                   <div
                     styled={{
@@ -259,14 +348,15 @@ export default class Base extends Component {
                       <Line
                         id={`child${index}`}
                         width={1}
-                        height={30}
-                        top={29}
+                        height={15}
+                        top={15}
                         style={{
                           display: "none",
-                          position: "absolute",
-                          left: "20.5px",
+                          position: "relative",
+                          left: "-30px",
                         }}
                       />
+
                       <FcDatabase size={20} />
 
                       <span>{s.name}</span>
@@ -281,7 +371,7 @@ export default class Base extends Component {
                         </Op>
                         <Op
                           id={`opDown${index}`}
-                          onClick={() => this.handleShowSections(index)}
+                          onClick={() => this.handleShowSections(index, s)}
                         >
                           <MdArrowDropDown size={15} />
                         </Op>
@@ -295,12 +385,17 @@ export default class Base extends Component {
                         </Op>
                       </DivOp>
                     </Dep>
+
                     <SectionsDep id={`dep${index}`}>
                       <div
                         id={`newSection${index}`}
                         style={{ display: "none" }}
                       >
-                        <FormNewProject onSubmit={this.handleSaveNewDep}>
+                        {/* Added new Section in Department or Section */}
+                        <FormNewProject
+                          onSubmit={this.handleSaveNewSection}
+                          onSubmitCapture={() => this.setState({ id: s.id })}
+                        >
                           <Input
                             autoFocus
                             required

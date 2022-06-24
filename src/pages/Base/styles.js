@@ -67,10 +67,13 @@ export const ListDeps = styled.div`
   overflow-x: hidden;
   max-height: 93.8vh;
   padding-bottom: 50px;
+  margin-top: 25px;
 `;
 
 export const Dep = styled.div`
-  width: 100%;
+  /* width: 100%; */
+  width: 380px;
+
   background: transparent;
   border: none;
   min-height: 30px;
@@ -132,9 +135,10 @@ export const Save = styled.button`
 `;
 
 export const DivOp = styled.div`
-  margin-left: 20px;
+  right: -60px;
   display: flex;
   flex-direction: row;
+  position: relative;
 `;
 
 export const Op = styled.button.attrs({
