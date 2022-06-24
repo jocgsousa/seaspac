@@ -135,7 +135,7 @@ export const Save = styled.button`
 `;
 
 export const DivOp = styled.div`
-  right: -60px;
+  right: -80px;
   display: flex;
   flex-direction: row;
   position: relative;
@@ -215,3 +215,21 @@ export const Section = styled.div`
     user-select: none;
   }
 `;
+
+export const ListForms = styled.div`
+  /* display: none; */
+  min-height: 0px;
+  max-height: 250px;
+  height: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-left: 1px solid #333;
+  margin-left: 10px;
+  transition: 0.2s all;
+  min-width: 20%;
+  top: -15px;
+  z-index: 1;
+  position: relative;
+`;
+
+export const Form = styled.div``;

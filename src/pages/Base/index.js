@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { FcAddDatabase, FcDatabase } from "react-icons/fc";
+import { FcAddDatabase, FcDatabase, FcDocument } from "react-icons/fc";
 import {
   MdClose,
   MdCheck,
@@ -30,6 +30,8 @@ import {
   Loading,
   ListSections,
   Section,
+  ListForms,
+  Form,
 } from "./styles";
 
 export default class Base extends Component {
@@ -38,6 +40,7 @@ export default class Base extends Component {
     sections: [],
     name: "",
     nameSection: "",
+    nameForm: "",
     loading: false,
     firstLoading: true,
     id: "",
@@ -242,10 +245,33 @@ export default class Base extends Component {
     document.getElementById(`listsections${index}`).style.display = "block";
   };
 
+  handleShowFormsSection = (sec, dep) => {
+    document.getElementById(`forms${sec}${dep}`).style.height = "250px";
+    document.getElementById(`opUpForms${sec}${dep}`).style.display = "block";
+    document.getElementById(`opDownForms${sec}${dep}`).style.display = "none";
+  };
+
+  handleHideFormsSection = (sec, dep) => {
+    document.getElementById(`forms${sec}${dep}`).style.height = "0px";
+    document.getElementById(`opUpForms${sec}${dep}`).style.display = "none";
+    document.getElementById(`opDownForms${sec}${dep}`).style.display = "block";
+  };
+
+  handleNewForm = (sec, dep) => {
+    document.getElementById(`newForm${sec}${dep}`).style.display = "block";
+  };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
-    const { newproject, sections, name, nameSection, loading, firstLoading } =
-      this.state;
+    const {
+      newproject,
+      sections,
+      name,
+      nameSection,
+      nameForm,
+      loading,
+      firstLoading,
+    } = this.state;
 
     return (
       <Container>
@@ -427,12 +453,143 @@ export default class Base extends Component {
 
                       <ListSections id={`listsections${index}`}>
                         {s.secoes.map((section) => (
-                          <Section>
-                            <Line width={0.5} height={30} top={-30} />
-                            <Line width={40} height={0.5} />
-                            <FcDatabase size={20} />
-                            <span>{section.title}</span>
-                          </Section>
+                          <>
+                            <Section>
+                              <Line width={0.5} height={30} top={-30} />
+                              <Line width={40} height={0.5} />
+                              <FcDatabase size={20} />
+                              <span>{section.title}</span>
+                              <div
+                                id={`newFormSection${index}`}
+                                style={{ display: "none" }}
+                              >
+                                {/* Added new Section in Department or Section */}
+                                <FormNewProject
+                                  onSubmit={this.handleSaveNewSection}
+                                  onSubmitCapture={() =>
+                                    this.setState({ id: s.id })
+                                  }
+                                >
+                                  <Input
+                                    autoFocus
+                                    required
+                                    value={nameSection}
+                                    onChange={(e) =>
+                                      this.setState({
+                                        nameSection: String(
+                                          e.target.value
+                                        ).toUpperCase(),
+                                      })
+                                    }
+                                  />
+                                  <Save type="submit">
+                                    <MdCheck size={20} color="#fff" />
+                                  </Save>
+                                  <Close
+                                    type="button"
+                                    onClick={() => {
+                                      this.setState({ nameSection: "" });
+                                      document.getElementById(
+                                        `newSection${index}`
+                                      ).style.display = "none";
+                                    }}
+                                  >
+                                    <MdClose size={20} color="#fff" />
+                                  </Close>
+                                </FormNewProject>
+                              </div>
+                              <DivOp style={{ right: "-20px", zIndex: "2" }}>
+                                <Op
+                                  onClick={() =>
+                                    this.handleNewForm(
+                                      section.id,
+                                      section.fk_dep_id
+                                    )
+                                  }
+                                  style={{ border: "none" }}
+                                >
+                                  <FcDocument size={20} />
+                                </Op>
+                                <Op
+                                  id={`opDownForms${section.id}${section.fk_dep_id}`}
+                                  onClick={() =>
+                                    this.handleShowFormsSection(
+                                      section.id,
+                                      section.fk_dep_id
+                                    )
+                                  }
+                                >
+                                  <MdArrowDropDown size={15} />
+                                </Op>
+                                <Op
+                                  style={{ display: "none" }}
+                                  id={`opUpForms${section.id}${section.fk_dep_id}`}
+                                  onClick={() =>
+                                    this.handleHideFormsSection(
+                                      section.id,
+                                      section.fk_dep_id
+                                    )
+                                  }
+                                >
+                                  <MdArrowDropUp size={15} />
+                                </Op>
+                              </DivOp>
+                            </Section>
+                            <ListForms
+                              id={`forms${section.id}${section.fk_dep_id}`}
+                            >
+                              <div
+                                id={`newForm${section.id}${section.fk_dep_id}`}
+                                style={{
+                                  display: "none",
+                                  marginTop: "20px",
+                                  marginLeft: "-11px",
+                                }}
+                              >
+                                {/* Added new Section in Department or Section */}
+                                <FormNewProject
+                                  onSubmit={this.handleSaveNewSection}
+                                  onSubmitCapture={() =>
+                                    this.setState({ id: s.id })
+                                  }
+                                >
+                                  <Input
+                                    autoFocus
+                                    required
+                                    value={nameForm}
+                                    onChange={(e) =>
+                                      this.setState({
+                                        nameForm: String(
+                                          e.target.value
+                                        ).toUpperCase(),
+                                      })
+                                    }
+                                  />
+                                  <Save type="submit">
+                                    <MdCheck size={20} color="#fff" />
+                                  </Save>
+                                  <Close
+                                    type="button"
+                                    onClick={() => {
+                                      this.setState({ nameForm: "" });
+                                      document.getElementById(
+                                        `newForm${section.id}${section.fk_dep_id}`
+                                      ).style.display = "none";
+                                    }}
+                                  >
+                                    <MdClose size={20} color="#fff" />
+                                  </Close>
+                                </FormNewProject>
+                              </div>
+
+                              {section.formularios &&
+                                section.formularios.map((form) => (
+                                  <Form>
+                                    <span>{form.title}</span>
+                                  </Form>
+                                ))}
+                            </ListForms>
+                          </>
                         ))}
                       </ListSections>
                     </SectionsDep>
