@@ -32,6 +32,7 @@ import {
   Section,
   ListForms,
   Form,
+  ButtonHeader,
 } from "./styles";
 
 export default class Base extends Component {
@@ -305,6 +306,8 @@ export default class Base extends Component {
           id: "",
           idSection: "",
         });
+        document.getElementById(`childSection${idSection}${id}`).style.display =
+          "block";
         this.handleListDeps();
       })
       .catch((error) => {
@@ -361,7 +364,9 @@ export default class Base extends Component {
             flexDirection="column"
             backgroundColor="#eee"
           >
-            <h2>Estrutura</h2>
+            <ButtonHeader>
+              <span>Estrutura</span>
+            </ButtonHeader>
 
             <Button
               style={{

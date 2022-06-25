@@ -260,3 +260,20 @@ export const Form = styled.div`
     user-select: none;
   }
 `;
+
+export const ButtonHeader = styled.button.attrs({
+  type: "button",
+})`
+  width: 100%;
+  min-height: 30px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  span {
+    font-size: 20px;
+    text-transform: uppercase;
+  }
+`;
