@@ -9,6 +9,7 @@ import {
   MdAdd,
   MdSync,
 } from "react-icons/md";
+import { uniqueId } from "lodash";
 import { ClassicSpinner } from "react-spinners-kit";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -33,6 +34,17 @@ import {
   ListForms,
   Form,
   ButtonHeader,
+  ListComponents,
+  // ComponentDep,
+  NoFormSelected,
+  IconNoDoc,
+  FormContainer,
+  HeaderForm,
+  TitleForm,
+  BodyFormComponents,
+  FooterFormComponents,
+  ButtonSaveFormComponents,
+  ButtonClose,
 } from "./styles";
 
 export default class Base extends Component {
@@ -46,6 +58,32 @@ export default class Base extends Component {
     firstLoading: true,
     id: "",
     idSection: "",
+    idForm: "",
+    formdata: [
+      {
+        id: 1,
+        type: "text",
+        element: "input",
+        children: "",
+        value: "",
+        defaultValue: "",
+        styles: "",
+        placeholder: "",
+        name: "",
+      },
+      {
+        id: 2,
+        type: "number",
+        element: "input",
+        children: "",
+        value: "",
+        defaultValue: "",
+        styles: "",
+        placeholder: "",
+        name: "",
+      },
+    ],
+    titleForm: "",
   };
 
   componentDidMount() {
@@ -351,6 +389,8 @@ export default class Base extends Component {
       nameForm,
       loading,
       firstLoading,
+      titleForm,
+      formdata,
     } = this.state;
 
     return (
@@ -700,7 +740,17 @@ export default class Base extends Component {
 
                               {section.formularios &&
                                 section.formularios.map((form) => (
-                                  <Form>
+                                  <Form
+                                    onClick={() => {
+                                      this.setState({
+                                        titleForm: form.title,
+                                        id: form.fk_dep_id,
+                                        idSection: form.fk_section_id,
+                                        idForm: form.id,
+                                        form: form.data,
+                                      });
+                                    }}
+                                  >
                                     <Line width={0.5} height={35} top={-35} />
                                     <Line width={40} height={0.5} />
                                     <FcDocument size={20} />
@@ -718,8 +768,66 @@ export default class Base extends Component {
             )}
           </Col>
 
-          <Col size={10} minHeight="100vh" backgroundColor="#ccc">
-            <h2>Componentes</h2>
+          <Col size={10} minHeight="100vh" backgroundColor="">
+            {!titleForm ? (
+              <NoFormSelected>
+                <IconNoDoc>
+                  <FcDocument size={50} />
+                </IconNoDoc>
+              </NoFormSelected>
+            ) : (
+              <ListComponents>
+                <FormContainer>
+                  <HeaderForm>
+                    <TitleForm>{titleForm}</TitleForm>
+                    <ButtonClose
+                      onClick={() =>
+                        this.setState({
+                          id: "",
+                          idSection: "",
+                          idForm: "",
+                          titleForm: "",
+                        })
+                      }
+                    >
+                      <MdClose size={20} color="#333" />
+                    </ButtonClose>
+                  </HeaderForm>
+
+                  <BodyFormComponents>
+                    {formdata.map((el) => (
+                      <>
+                        {el.element === "input" && (
+                          <input
+                            id={`formElement${el}`}
+                            type={el.type}
+                            placeholder={`${el.type}`}
+                            value={el.value}
+                            defaultValue={el.defaultValue}
+                            styles={`{${el.styles}}`}
+                            onChange={(e) => {
+                              this.setState({
+                                formdata: formdata.map((c) =>
+                                  c.id === el.id
+                                    ? { ...c, value: e.target.value }
+                                    : c
+                                ),
+                              });
+                            }}
+                          />
+                        )}
+                      </>
+                    ))}
+                  </BodyFormComponents>
+
+                  <FooterFormComponents>
+                    <ButtonSaveFormComponents>
+                      <span>Salvar</span>
+                    </ButtonSaveFormComponents>
+                  </FooterFormComponents>
+                </FormContainer>
+              </ListComponents>
+            )}
           </Col>
         </Row>
       </Container>

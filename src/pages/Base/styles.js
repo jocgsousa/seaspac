@@ -232,7 +232,7 @@ export const ListForms = styled.div`
 
 export const Form = styled.div`
   /* margin-top: 15px; */
-
+  cursor: pointer;
   width: 100%;
   background: transparent;
   border: none;
@@ -276,4 +276,87 @@ export const ButtonHeader = styled.button.attrs({
     font-size: 20px;
     text-transform: uppercase;
   }
+`;
+
+export const ComponentDep = styled.div``;
+
+export const NoFormSelected = styled.div`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const IconNoDoc = styled.div`
+  height: 70px;
+  width: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 35px;
+  background-color: #ddd;
+`;
+
+export const ListComponents = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100vh;
+`;
+
+export const FormContainer = styled.div`
+  height: 95vh;
+  width: 95%;
+  background: #ddd;
+`;
+
+export const HeaderForm = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 5%;
+  padding-left: 5px;
+  border-bottom: 1px solid #ccc;
+`;
+
+export const TitleForm = styled.div``;
+
+export const ButtonClose = styled.button.attrs({
+  type: "button",
+})`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  margin-right: 5px;
+  cursor: pointer;
+`;
+
+export const BodyFormComponents = styled.div`
+  width: 100%;
+  height: 90%;
+  padding: 5px;
+`;
+
+export const FooterFormComponents = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 15px;
+  border-top: 1px solid #ccc;
+  height: 5%;
+`;
+
+export const ButtonSaveFormComponents = styled.button.attrs({
+  type: "button",
+})`
+  min-width: 100px;
+  min-height: 30px;
 `;

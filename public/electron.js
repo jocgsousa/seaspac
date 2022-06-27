@@ -8,7 +8,9 @@ function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 700,
+    minWidth: 800,
+    minHeight: 700,
     show: false,
     icon: path.resolve(__dirname, "favicon.ico"),
     webPreferences: {
