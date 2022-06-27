@@ -614,7 +614,8 @@ export default class Base extends Component {
 
                                     this.handleShowFormsSection(
                                       section.id,
-                                      section.fk_dep_id
+                                      section.fk_dep_id,
+                                      section.formularios
                                     );
                                   }}
                                   style={{ border: "none" }}
