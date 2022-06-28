@@ -866,10 +866,10 @@ export default class Base extends Component {
                         position={null}
                         grid={[25, 25]}
                         scale={1}
-                        offsetParent=""
                         onStart={this.handleStart}
                         onDrag={this.handleDrag}
                         onStop={this.handleStop}
+                        bounds="bodyForm"
                       >
                         <div id="element">
                           {el.element === "input" && (
