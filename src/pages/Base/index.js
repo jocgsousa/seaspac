@@ -8,11 +8,13 @@ import {
   MdSupervisorAccount,
   MdAdd,
   MdSync,
+  MdDelete,
 } from "react-icons/md";
 import { uniqueId } from "lodash";
 import { ClassicSpinner } from "react-spinners-kit";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Draggable from "react-draggable";
 import {
   Container,
   Row,
@@ -45,6 +47,9 @@ import {
   FooterFormComponents,
   ButtonSaveFormComponents,
   ButtonClose,
+  AddItem,
+  ButtonSaveItem,
+  Delete,
 } from "./styles";
 
 export default class Base extends Component {
@@ -59,12 +64,27 @@ export default class Base extends Component {
     id: "",
     idSection: "",
     idForm: "",
+    idComponentForm: "",
+    nameItem: "",
+    valorItem: "",
     formdata: [
       {
-        id: 1,
+        id: uniqueId(),
+        type: "",
+        element: "select",
+        children: [],
+        value: "",
+        defaultValue: "",
+        styles: "",
+        placeholder: "",
+        name: "",
+      },
+
+      {
+        id: uniqueId(),
         type: "text",
         element: "input",
-        children: "",
+        children: [],
         value: "",
         defaultValue: "",
         styles: "",
@@ -72,10 +92,22 @@ export default class Base extends Component {
         name: "",
       },
       {
-        id: 2,
+        id: uniqueId(),
         type: "number",
         element: "input",
-        children: "",
+        children: [],
+        value: "",
+        defaultValue: "",
+        styles: "",
+        placeholder: "",
+        name: "",
+      },
+
+      {
+        id: uniqueId(),
+        type: "",
+        element: "select",
+        children: [],
         value: "",
         defaultValue: "",
         styles: "",
@@ -379,6 +411,35 @@ export default class Base extends Component {
     });
   };
 
+  handleAddItem = (e) => {
+    e.preventDefault();
+    const { formdata, idComponentForm, nameItem, valorItem } = this.state;
+
+    try {
+      this.setState({
+        formdata: formdata.map((el) =>
+          el.id === idComponentForm
+            ? {
+                ...el,
+                children: [
+                  ...el.children,
+                  { id: uniqueId(), name: nameItem, value: valorItem },
+                ],
+              }
+            : el
+        ),
+      });
+      this.setState({
+        nameItem: "",
+        valorItem: "",
+      });
+      document.getElementById(`additem${idComponentForm}`).style.display =
+        "none";
+    } catch (error) {
+      window.alert("Falha ao adicionar item!");
+    }
+  };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
     const {
@@ -391,6 +452,8 @@ export default class Base extends Component {
       firstLoading,
       titleForm,
       formdata,
+      nameItem,
+      valorItem,
     } = this.state;
 
     return (
@@ -794,29 +857,131 @@ export default class Base extends Component {
                     </ButtonClose>
                   </HeaderForm>
 
-                  <BodyFormComponents>
+                  <BodyFormComponents className="bodyForm">
                     {formdata.map((el) => (
-                      <>
-                        {el.element === "input" && (
-                          <input
-                            id={`formElement${el}`}
-                            type={el.type}
-                            placeholder={`${el.type}`}
-                            value={el.value}
-                            defaultValue={el.defaultValue}
-                            styles={`{${el.styles}}`}
-                            onChange={(e) => {
-                              this.setState({
-                                formdata: formdata.map((c) =>
-                                  c.id === el.id
-                                    ? { ...c, value: e.target.value }
-                                    : c
-                                ),
-                              });
-                            }}
-                          />
-                        )}
-                      </>
+                      <Draggable
+                        axis="both"
+                        handle="#element"
+                        defaultPosition={{ x: 0, y: 0 }}
+                        position={null}
+                        grid={[25, 25]}
+                        scale={1}
+                        offsetParent=""
+                        onStart={this.handleStart}
+                        onDrag={this.handleDrag}
+                        onStop={this.handleStop}
+                      >
+                        <div id="element">
+                          {el.element === "input" && (
+                            <input
+                              id={`formElement${el}`}
+                              type={el.type}
+                              placeholder={`${el.type}`}
+                              value={el.value}
+                              defaultValue={el.defaultValue}
+                              styles={`{${el.styles}}`}
+                              onChange={(e) => {
+                                this.setState({
+                                  formdata: formdata.map((c) =>
+                                    c.id === el.id
+                                      ? { ...c, value: e.target.value }
+                                      : c
+                                  ),
+                                });
+                              }}
+                            />
+                          )}
+                          {el.element === "select" && (
+                            <>
+                              <select
+                                value={el.value}
+                                onChange={(e) => {
+                                  if (e.target.value === "add") {
+                                    const div = document.getElementById(
+                                      `additem${el.id}`
+                                    );
+                                    div.style.marginLeft = `${
+                                      e.target.offsetLeft - 305
+                                    }px`;
+                                    div.style.top = `${
+                                      e.target.offsetTop - 2
+                                    }px`;
+                                    div.style.display = "flex";
+                                  } else {
+                                    this.setState({
+                                      formdata: formdata.map((c) =>
+                                        c.id === el.id
+                                          ? { ...c, value: e.target.value }
+                                          : c
+                                      ),
+                                    });
+                                  }
+                                }}
+                              >
+                                <option value="">...</option>
+                                <option value="add">Adicionar item </option>
+
+                                {el.children.length && (
+                                  <>
+                                    {el.children.map((ch) => (
+                                      <option value={ch.value}>
+                                        {ch.name}
+                                      </option>
+                                    ))}
+                                  </>
+                                )}
+                              </select>{" "}
+                              <AddItem
+                                className="areaAddItem"
+                                id={`additem${el.id}`}
+                                style={{ display: "none" }}
+                                onSubmit={this.handleAddItem}
+                                onSubmitCapture={() =>
+                                  this.setState({ idComponentForm: el.id })
+                                }
+                              >
+                                <HeaderForm
+                                  style={{ justifyContent: "flex-end" }}
+                                >
+                                  <ButtonClose
+                                    onClick={() =>
+                                      (document.getElementById(
+                                        `additem${el.id}`
+                                      ).style.display = "none")
+                                    }
+                                  >
+                                    <MdClose size={15} color="#333" />
+                                  </ButtonClose>
+                                </HeaderForm>
+                                <input
+                                  type="text"
+                                  placeholder="Nome do item"
+                                  onChange={(e) =>
+                                    this.setState({ nameItem: e.target.value })
+                                  }
+                                  value={nameItem}
+                                  required
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="Valor do item"
+                                  onChange={(e) =>
+                                    this.setState({ valorItem: e.target.value })
+                                  }
+                                  value={valorItem}
+                                />
+
+                                <ButtonSaveItem>
+                                  <span>Adicionar</span>
+                                </ButtonSaveItem>
+                              </AddItem>
+                            </>
+                          )}
+                          <Delete>
+                            <MdDelete size={15} color="red" />
+                          </Delete>
+                        </div>
+                      </Draggable>
                     ))}
                   </BodyFormComponents>
 

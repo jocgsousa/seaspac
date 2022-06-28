@@ -323,7 +323,17 @@ export const HeaderForm = styled.div`
   border-bottom: 1px solid #ccc;
 `;
 
-export const TitleForm = styled.div``;
+export const TitleForm = styled.h4`
+  white-space: nowrap;
+  width: 70%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  -webkit-user-select: none; /* Chrome all / Safari all */
+  -moz-user-select: none; /* Firefox all */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none;
+`;
 
 export const ButtonClose = styled.button.attrs({
   type: "button",
@@ -343,6 +353,27 @@ export const BodyFormComponents = styled.div`
   width: 100%;
   height: 90%;
   padding: 5px;
+
+  input,
+  select,
+  textarea {
+    min-height: 30px;
+    margin-left: 10px;
+  }
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  /* grid-template-rows: 100px 100px 100px 100px; */
+  grid-gap: 10px;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  #element {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
 `;
 
 export const FooterFormComponents = styled.div`
@@ -358,5 +389,47 @@ export const ButtonSaveFormComponents = styled.button.attrs({
   type: "button",
 })`
   min-width: 100px;
+  min-height: 25px;
+  cursor: pointer;
+`;
+
+export const AddItem = styled.form`
+  position: absolute;
+  min-height: 100px;
+  min-width: 200px;
+  background-color: #fff;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  input {
+    min-height: 30px;
+    min-width: 90%;
+    border: none;
+    border-radius: 4px;
+    padding-left: 2px;
+    background-color: #ddd;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+`;
+
+export const ButtonSaveItem = styled.button.attrs({
+  type: "submit",
+})`
   min-height: 30px;
+  min-width: 90%;
+  margin-bottom: 15px;
+`;
+
+export const Delete = styled.button.attrs({
+  type: "button",
+})`
+  height: 20px;
+  width: 20px;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `;
