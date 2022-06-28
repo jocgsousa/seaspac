@@ -11,7 +11,7 @@ import {
   MdDelete,
 } from "react-icons/md";
 
-import { Resizable, ResizableBox } from "react-resizable";
+import { ResizableBox } from "react-resizable";
 
 import { uniqueId } from "lodash";
 import { ClassicSpinner } from "react-spinners-kit";
@@ -479,6 +479,8 @@ export default class Base extends Component {
         y: y + ui.deltaY,
       },
     });
+
+    console.log(x, y);
   };
 
   onResize = (event, { element, size, handle }) => {
