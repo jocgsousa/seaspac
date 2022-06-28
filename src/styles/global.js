@@ -16,7 +16,8 @@ export default createGlobalStyle`
     }
     
     body{
-        font-family: 'Roboto';
+        /* font-family: 'Roboto'; */
+        font-family: Verdana, Arial, Helvetica, sans-serif;
         -webkit-font-smoothing: antialiased !important;
         background-color: #a8c9f8;
         overflow: hidden;

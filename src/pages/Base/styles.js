@@ -365,27 +365,30 @@ export const BodyFormComponents = styled.div`
     width: 100%;
     height: 100%;
     overflow: auto;
-    display: grid;
-    grid: 5% / auto auto auto auto;
-    grid-gap: 5px;
+    /* display: grid; */
+    /* grid: 100% / auto auto auto auto; */
+    /* grid-gap: 5px; */
     /* background-color: #2196f3; */
     /* padding: 10px; */
   }
+`;
 
-  #element {
-    border: 2px solid red;
-    max-height: 40px;
-    display: flex;
-    width: 250px;
-    align-items: center;
+export const Element = styled.div`
+  /* border: 2px solid red; */
+  max-height: 40px;
+  display: flex;
+  width: 250px;
+  align-items: center;
+
+  input,
+  select,
+  textarea {
+    min-height: 30px;
+    padding-left: 2px;
+    max-width: 500px;
+    min-width: ${(props) =>
+      props.styles.width ? `${props.styles.width}px` : "250px"};
     cursor: move;
-    input,
-    select,
-    textarea {
-      min-height: 30px;
-      padding-left: 2px;
-      min-width: 200px;
-    }
   }
 `;
 

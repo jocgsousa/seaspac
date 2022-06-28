@@ -10,6 +10,9 @@ import {
   MdSync,
   MdDelete,
 } from "react-icons/md";
+
+import { Resizable, ResizableBox } from "react-resizable";
+
 import { uniqueId } from "lodash";
 import { ClassicSpinner } from "react-spinners-kit";
 import axios from "axios";
@@ -50,7 +53,10 @@ import {
   AddItem,
   ButtonSaveItem,
   Delete,
+  Element,
 } from "./styles";
+
+import "./styles.css";
 
 export default class Base extends Component {
   state = {
@@ -75,7 +81,10 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
-        styles: "",
+        styles: {
+          height: 30,
+          width: 200,
+        },
         placeholder: "",
         name: "",
       },
@@ -87,7 +96,10 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
-        styles: "",
+        styles: {
+          height: 30,
+          width: 200,
+        },
         placeholder: "",
         name: "",
       },
@@ -98,7 +110,10 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
-        styles: "",
+        styles: {
+          height: 30,
+          width: 200,
+        },
         placeholder: "",
         name: "",
       },
@@ -110,7 +125,10 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
-        styles: "",
+        styles: {
+          height: 30,
+          width: 200,
+        },
         placeholder: "",
         name: "",
       },
@@ -461,6 +479,22 @@ export default class Base extends Component {
         y: y + ui.deltaY,
       },
     });
+  };
+
+  onResize = (event, { element, size, handle }) => {
+    const { idComponentForm, formdata } = this.state;
+    console.log("id: " + idComponentForm);
+    console.log(size.width);
+
+    this.setState({
+      formdata: formdata.map((el) =>
+        el.id === idComponentForm
+          ? { ...el, styles: { ...el.styles, width: size.width } }
+          : el
+      ),
+    });
+
+    console.log(formdata);
   };
   render() {
     document.title = "SEASPAC - HOMEBASE";
@@ -895,116 +929,134 @@ export default class Base extends Component {
                           onDrag={this.handleDrag}
                           onStop={this.onStop}
                         >
-                          <div id="element" className="element">
-                            {el.element === "input" && (
-                              <input
-                                id={`formElement${el}`}
-                                type={el.type}
-                                placeholder={`${el.type}`}
-                                value={el.value}
-                                defaultValue={el.defaultValue}
-                                styles={`{${el.styles}}`}
-                                onChange={(e) => {
-                                  this.setState({
-                                    formdata: formdata.map((c) =>
-                                      c.id === el.id
-                                        ? { ...c, value: e.target.value }
-                                        : c
-                                    ),
-                                  });
-                                }}
-                              />
-                            )}
-                            {el.element === "select" && (
-                              <>
-                                <select
+                          <ResizableBox
+                            height={el.styles.height}
+                            width={el.styles.width}
+                            onResize={this.onResize}
+                            onResizeStart={() => {
+                              this.setState({
+                                idComponentForm: el.id,
+                              });
+                            }}
+                            // draggableOpts={{...}}
+                          >
+                            <Element
+                              id="element"
+                              className="element"
+                              styles={el.styles}
+                            >
+                              {el.element === "input" && (
+                                <input
+                                  id={`formElement${el}`}
+                                  type={el.type}
+                                  placeholder={`${el.type}`}
                                   value={el.value}
+                                  defaultValue={el.defaultValue}
                                   onChange={(e) => {
-                                    console.log(e);
-                                    if (e.target.value === "add") {
-                                      const div = document.getElementById(
-                                        `additem${el.id}`
-                                      );
-
-                                      div.style.display = "flex";
-                                    } else {
-                                      this.setState({
-                                        formdata: formdata.map((c) =>
-                                          c.id === el.id
-                                            ? { ...c, value: e.target.value }
-                                            : c
-                                        ),
-                                      });
-                                    }
+                                    this.setState({
+                                      formdata: formdata.map((c) =>
+                                        c.id === el.id
+                                          ? { ...c, value: e.target.value }
+                                          : c
+                                      ),
+                                    });
                                   }}
-                                >
-                                  <option value="">...</option>
-                                  <option value="add">Adicionar item </option>
-
-                                  {el.children.length && (
-                                    <>
-                                      {el.children.map((ch) => (
-                                        <option value={ch.value}>
-                                          {ch.name}
-                                        </option>
-                                      ))}
-                                    </>
-                                  )}
-                                </select>
-                                <AddItem
-                                  className="areaAddItem"
-                                  id={`additem${el.id}`}
-                                  style={{ display: "none" }}
-                                  onSubmit={this.handleAddItem}
-                                  onSubmitCapture={() =>
-                                    this.setState({ idComponentForm: el.id })
-                                  }
-                                >
-                                  <HeaderForm
-                                    style={{ justifyContent: "flex-end" }}
-                                  >
-                                    <ButtonClose
-                                      onClick={() =>
-                                        (document.getElementById(
+                                />
+                              )}
+                              {el.element === "select" && (
+                                <>
+                                  <select
+                                    value={el.value}
+                                    onChange={(e) => {
+                                      console.log(e);
+                                      if (e.target.value === "add") {
+                                        const div = document.getElementById(
                                           `additem${el.id}`
-                                        ).style.display = "none")
-                                      }
-                                    >
-                                      <MdClose size={15} color="#333" />
-                                    </ButtonClose>
-                                  </HeaderForm>
-                                  <input
-                                    type="text"
-                                    placeholder="Nome do item"
-                                    onChange={(e) =>
-                                      this.setState({
-                                        nameItem: e.target.value,
-                                      })
-                                    }
-                                    value={nameItem}
-                                    required
-                                  />
-                                  <input
-                                    type="text"
-                                    placeholder="Valor do item"
-                                    onChange={(e) =>
-                                      this.setState({
-                                        valorItem: e.target.value,
-                                      })
-                                    }
-                                    value={valorItem}
-                                  />
+                                        );
 
-                                  <ButtonSaveItem>
-                                    <span>Adicionar</span>
-                                  </ButtonSaveItem>
-                                </AddItem>
-                              </>
-                            )}
-                            <Delete>
-                              <MdDelete size={15} color="red" />
-                            </Delete>
-                          </div>
+                                        div.style.display = "flex";
+                                      } else {
+                                        this.setState({
+                                          formdata: formdata.map((c) =>
+                                            c.id === el.id
+                                              ? { ...c, value: e.target.value }
+                                              : c
+                                          ),
+                                        });
+                                      }
+                                    }}
+                                    styles={{
+                                      width: `${el.styles.width}px`,
+                                    }}
+                                  >
+                                    <option value="">...</option>
+                                    <option value="add">Adicionar item </option>
+
+                                    {el.children.length && (
+                                      <>
+                                        {el.children.map((ch) => (
+                                          <option value={ch.value}>
+                                            {ch.name}
+                                          </option>
+                                        ))}
+                                      </>
+                                    )}
+                                  </select>
+                                  <AddItem
+                                    className="areaAddItem"
+                                    id={`additem${el.id}`}
+                                    style={{ display: "none" }}
+                                    onSubmit={this.handleAddItem}
+                                    onSubmitCapture={() =>
+                                      this.setState({ idComponentForm: el.id })
+                                    }
+                                  >
+                                    <HeaderForm
+                                      style={{ justifyContent: "flex-end" }}
+                                    >
+                                      <ButtonClose
+                                        onClick={() =>
+                                          (document.getElementById(
+                                            `additem${el.id}`
+                                          ).style.display = "none")
+                                        }
+                                      >
+                                        <MdClose size={15} color="#333" />
+                                      </ButtonClose>
+                                    </HeaderForm>
+                                    <input
+                                      type="text"
+                                      placeholder="Nome do item"
+                                      onChange={(e) =>
+                                        this.setState({
+                                          nameItem: e.target.value,
+                                        })
+                                      }
+                                      value={nameItem}
+                                      required
+                                    />
+                                    <input
+                                      type="text"
+                                      placeholder="Valor do item"
+                                      onChange={(e) =>
+                                        this.setState({
+                                          valorItem: e.target.value,
+                                        })
+                                      }
+                                      value={valorItem}
+                                    />
+
+                                    <ButtonSaveItem>
+                                      <span>Adicionar</span>
+                                    </ButtonSaveItem>
+                                  </AddItem>
+                                </>
+                              )}
+                              <Delete>
+                                <MdDelete size={15} color="red" />
+                              </Delete>
+                            </Element>
+                          </ResizableBox>
                         </Draggable>
                       ))}
                     </div>
