@@ -350,29 +350,42 @@ export const ButtonClose = styled.button.attrs({
 `;
 
 export const BodyFormComponents = styled.div`
+  height: 85%;
   width: 100%;
-  height: 90%;
-  padding: 5px;
+  position: relative;
 
-  input,
-  select,
-  textarea {
-    min-height: 30px;
-    margin-left: 10px;
-  }
-  display: grid;
-  grid-template-columns: auto auto auto auto;
-  /* grid-template-rows: 100px 100px 100px 100px; */
-  grid-gap: 10px;
-
+  padding: 0;
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
+
+  #content {
+    padding: 2%;
+    /* border: 2px solid red; */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    display: grid;
+    grid: 5% / auto auto auto auto;
+    grid-gap: 5px;
+    /* background-color: #2196f3; */
+    /* padding: 10px; */
+  }
 
   #element {
+    border: 2px solid red;
+    max-height: 40px;
     display: flex;
+    width: 250px;
     align-items: center;
-    flex-direction: row;
+    cursor: move;
+    input,
+    select,
+    textarea {
+      min-height: 30px;
+      padding-left: 2px;
+      min-width: 200px;
+    }
   }
 `;
 
@@ -395,6 +408,10 @@ export const ButtonSaveFormComponents = styled.button.attrs({
 
 export const AddItem = styled.form`
   position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 9999999999999999 !important;
+  left: 8%;
   min-height: 100px;
   min-width: 200px;
   background-color: #fff;

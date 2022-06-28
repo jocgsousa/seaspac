@@ -116,6 +116,12 @@ export default class Base extends Component {
       },
     ],
     titleForm: "",
+    activeDrags: 0,
+
+    deltaPosition: {
+      x: 0,
+      y: 0,
+    },
   };
 
   componentDidMount() {
@@ -440,8 +446,26 @@ export default class Base extends Component {
     }
   };
 
+  onStart = () => {
+    this.setState({ activeDrags: ++this.state.activeDrags });
+  };
+
+  onStop = () => {
+    this.setState({ activeDrags: --this.state.activeDrags });
+  };
+  handleDrag = (e, ui) => {
+    const { x, y } = this.state.deltaPosition;
+    this.setState({
+      deltaPosition: {
+        x: x + ui.deltaX,
+        y: y + ui.deltaY,
+      },
+    });
+  };
   render() {
     document.title = "SEASPAC - HOMEBASE";
+    // const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
+
     const {
       newproject,
       sections,
@@ -857,132 +881,133 @@ export default class Base extends Component {
                     </ButtonClose>
                   </HeaderForm>
 
-                  <BodyFormComponents className="bodyForm">
-                    {formdata.map((el) => (
-                      <Draggable
-                        axis="both"
-                        handle="#element"
-                        defaultPosition={{ x: 0, y: 0 }}
-                        position={null}
-                        grid={[25, 25]}
-                        scale={1}
-                        onStart={this.handleStart}
-                        onDrag={this.handleDrag}
-                        onStop={this.handleStop}
-                        bounds="bodyForm"
-                      >
-                        <div id="element">
-                          {el.element === "input" && (
-                            <input
-                              id={`formElement${el}`}
-                              type={el.type}
-                              placeholder={`${el.type}`}
-                              value={el.value}
-                              defaultValue={el.defaultValue}
-                              styles={`{${el.styles}}`}
-                              onChange={(e) => {
-                                this.setState({
-                                  formdata: formdata.map((c) =>
-                                    c.id === el.id
-                                      ? { ...c, value: e.target.value }
-                                      : c
-                                  ),
-                                });
-                              }}
-                            />
-                          )}
-                          {el.element === "select" && (
-                            <>
-                              <select
+                  <BodyFormComponents>
+                    <div id="content">
+                      {formdata.map((el) => (
+                        <Draggable
+                          axis="both"
+                          handle=".element"
+                          defaultPosition={{ x: 0, y: 0 }}
+                          position={null}
+                          grid={[5, 5]}
+                          // scale={1}
+                          onStart={this.onStart}
+                          onDrag={this.handleDrag}
+                          onStop={this.onStop}
+                        >
+                          <div id="element" className="element">
+                            {el.element === "input" && (
+                              <input
+                                id={`formElement${el}`}
+                                type={el.type}
+                                placeholder={`${el.type}`}
                                 value={el.value}
+                                defaultValue={el.defaultValue}
+                                styles={`{${el.styles}}`}
                                 onChange={(e) => {
-                                  if (e.target.value === "add") {
-                                    const div = document.getElementById(
-                                      `additem${el.id}`
-                                    );
-                                    div.style.marginLeft = `${
-                                      e.target.offsetLeft - 305
-                                    }px`;
-                                    div.style.top = `${
-                                      e.target.offsetTop - 2
-                                    }px`;
-                                    div.style.display = "flex";
-                                  } else {
-                                    this.setState({
-                                      formdata: formdata.map((c) =>
-                                        c.id === el.id
-                                          ? { ...c, value: e.target.value }
-                                          : c
-                                      ),
-                                    });
-                                  }
+                                  this.setState({
+                                    formdata: formdata.map((c) =>
+                                      c.id === el.id
+                                        ? { ...c, value: e.target.value }
+                                        : c
+                                    ),
+                                  });
                                 }}
-                              >
-                                <option value="">...</option>
-                                <option value="add">Adicionar item </option>
-
-                                {el.children.length && (
-                                  <>
-                                    {el.children.map((ch) => (
-                                      <option value={ch.value}>
-                                        {ch.name}
-                                      </option>
-                                    ))}
-                                  </>
-                                )}
-                              </select>{" "}
-                              <AddItem
-                                className="areaAddItem"
-                                id={`additem${el.id}`}
-                                style={{ display: "none" }}
-                                onSubmit={this.handleAddItem}
-                                onSubmitCapture={() =>
-                                  this.setState({ idComponentForm: el.id })
-                                }
-                              >
-                                <HeaderForm
-                                  style={{ justifyContent: "flex-end" }}
-                                >
-                                  <ButtonClose
-                                    onClick={() =>
-                                      (document.getElementById(
+                              />
+                            )}
+                            {el.element === "select" && (
+                              <>
+                                <select
+                                  value={el.value}
+                                  onChange={(e) => {
+                                    console.log(e);
+                                    if (e.target.value === "add") {
+                                      const div = document.getElementById(
                                         `additem${el.id}`
-                                      ).style.display = "none")
-                                    }
-                                  >
-                                    <MdClose size={15} color="#333" />
-                                  </ButtonClose>
-                                </HeaderForm>
-                                <input
-                                  type="text"
-                                  placeholder="Nome do item"
-                                  onChange={(e) =>
-                                    this.setState({ nameItem: e.target.value })
-                                  }
-                                  value={nameItem}
-                                  required
-                                />
-                                <input
-                                  type="text"
-                                  placeholder="Valor do item"
-                                  onChange={(e) =>
-                                    this.setState({ valorItem: e.target.value })
-                                  }
-                                  value={valorItem}
-                                />
+                                      );
 
-                                <ButtonSaveItem>
-                                  <span>Adicionar</span>
-                                </ButtonSaveItem>
-                              </AddItem>
-                            </>
-                          )}
-                          <Delete>
-                            <MdDelete size={15} color="red" />
-                          </Delete>
-                        </div>
-                      </Draggable>
-                    ))}
+                                      div.style.display = "flex";
+                                    } else {
+                                      this.setState({
+                                        formdata: formdata.map((c) =>
+                                          c.id === el.id
+                                            ? { ...c, value: e.target.value }
+                                            : c
+                                        ),
+                                      });
+                                    }
+                                  }}
+                                >
+                                  <option value="">...</option>
+                                  <option value="add">Adicionar item </option>
+
+                                  {el.children.length && (
+                                    <>
+                                      {el.children.map((ch) => (
+                                        <option value={ch.value}>
+                                          {ch.name}
+                                        </option>
+                                      ))}
+                                    </>
+                                  )}
+                                </select>
+                                <AddItem
+                                  className="areaAddItem"
+                                  id={`additem${el.id}`}
+                                  style={{ display: "none" }}
+                                  onSubmit={this.handleAddItem}
+                                  onSubmitCapture={() =>
+                                    this.setState({ idComponentForm: el.id })
+                                  }
+                                >
+                                  <HeaderForm
+                                    style={{ justifyContent: "flex-end" }}
+                                  >
+                                    <ButtonClose
+                                      onClick={() =>
+                                        (document.getElementById(
+                                          `additem${el.id}`
+                                        ).style.display = "none")
+                                      }
+                                    >
+                                      <MdClose size={15} color="#333" />
+                                    </ButtonClose>
+                                  </HeaderForm>
+                                  <input
+                                    type="text"
+                                    placeholder="Nome do item"
+                                    onChange={(e) =>
+                                      this.setState({
+                                        nameItem: e.target.value,
+                                      })
+                                    }
+                                    value={nameItem}
+                                    required
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Valor do item"
+                                    onChange={(e) =>
+                                      this.setState({
+                                        valorItem: e.target.value,
+                                      })
+                                    }
+                                    value={valorItem}
+                                  />
+
+                                  <ButtonSaveItem>
+                                    <span>Adicionar</span>
+                                  </ButtonSaveItem>
+                                </AddItem>
+                              </>
+                            )}
+                            <Delete>
+                              <MdDelete size={15} color="red" />
+                            </Delete>
+                          </div>
+                        </Draggable>
+                      ))}
+                    </div>
                   </BodyFormComponents>
 
                   <FooterFormComponents>
