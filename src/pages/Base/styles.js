@@ -375,7 +375,8 @@ export const BodyFormComponents = styled.div`
 
 export const Element = styled.div`
   /* border: 2px solid red; */
-  max-height: 40px;
+  position: relative;
+  min-height: 40px;
   display: flex;
   width: 250px;
   align-items: center;
@@ -383,11 +384,14 @@ export const Element = styled.div`
   input,
   select,
   textarea {
-    min-height: 30px;
     padding-left: 2px;
     max-width: 500px;
     min-width: ${(props) =>
       props.styles.width ? `${props.styles.width}px` : "250px"};
+
+    min-height: ${(props) =>
+      props.styles.height ? `${props.styles.height}px` : "250px"};
+
     cursor: move;
   }
 `;

@@ -82,7 +82,7 @@ export default class Base extends Component {
         value: "",
         defaultValue: "",
         styles: {
-          height: 30,
+          height: 40,
           width: 200,
         },
         placeholder: "",
@@ -97,7 +97,7 @@ export default class Base extends Component {
         value: "",
         defaultValue: "",
         styles: {
-          height: 30,
+          height: 40,
           width: 200,
         },
         placeholder: "",
@@ -111,7 +111,7 @@ export default class Base extends Component {
         value: "",
         defaultValue: "",
         styles: {
-          height: 30,
+          height: 40,
           width: 200,
         },
         placeholder: "",
@@ -126,7 +126,7 @@ export default class Base extends Component {
         value: "",
         defaultValue: "",
         styles: {
-          height: 30,
+          height: 40,
           width: 200,
         },
         placeholder: "",
@@ -464,23 +464,35 @@ export default class Base extends Component {
     }
   };
 
+  // Not using
   onStart = () => {
     this.setState({ activeDrags: ++this.state.activeDrags });
   };
-
+  // Not using
   onStop = () => {
     this.setState({ activeDrags: --this.state.activeDrags });
   };
+
   handleDrag = (e, ui) => {
     const { x, y } = this.state.deltaPosition;
+    const { idComponentForm, formdata } = this.state;
     this.setState({
       deltaPosition: {
         x: x + ui.deltaX,
         y: y + ui.deltaY,
       },
+
+      formdata: formdata.map((el) =>
+        el.id === idComponentForm
+          ? {
+              ...el,
+              styles: { ...el.styles, left: x, top: y },
+            }
+          : el
+      ),
     });
 
-    console.log(x, y);
+    console.log(formdata);
   };
 
   onResize = (event, { element, size, handle }) => {
@@ -491,13 +503,21 @@ export default class Base extends Component {
     this.setState({
       formdata: formdata.map((el) =>
         el.id === idComponentForm
-          ? { ...el, styles: { ...el.styles, width: size.width } }
+          ? {
+              ...el,
+              styles: {
+                ...el.styles,
+                width: size.width,
+                height: size.height >= 40 ? size.height : 40,
+              },
+            }
           : el
       ),
     });
 
     console.log(formdata);
   };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
     // const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
@@ -923,13 +943,26 @@ export default class Base extends Component {
                         <Draggable
                           axis="both"
                           handle=".element"
-                          defaultPosition={{ x: 0, y: 0 }}
-                          position={null}
+                          defaultPosition={{
+                            x: 0,
+                            y: 0,
+                          }}
+                          position={{ x: el.styles.left, y: el.styles.top }}
                           grid={[5, 5]}
                           // scale={1}
-                          onStart={this.onStart}
+                          onStart={() =>
+                            this.setState({ idComponentForm: el.id })
+                          }
                           onDrag={this.handleDrag}
-                          onStop={this.onStop}
+                          onStop={() => {
+                            this.setState({
+                              idComponentForm: "",
+                              deltaPosition: {
+                                x: 0,
+                                y: 0,
+                              },
+                            });
+                          }}
                         >
                           <ResizableBox
                             height={el.styles.height}
@@ -940,7 +973,6 @@ export default class Base extends Component {
                                 idComponentForm: el.id,
                               });
                             }}
-                            // draggableOpts={{...}}
                           >
                             <Element
                               id="element"
