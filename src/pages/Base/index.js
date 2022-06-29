@@ -954,8 +954,8 @@ export default class Base extends Component {
                             this.setState({ idComponentForm: el.id })
                           }
                           onDrag={this.handleDrag}
-                          onStop={() => {
-                            this.setState({
+                          onStop={async () => {
+                            await this.setState({
                               idComponentForm: "",
                               deltaPosition: {
                                 x: 0,
