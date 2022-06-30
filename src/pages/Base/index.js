@@ -9,7 +9,22 @@ import {
   MdAdd,
   MdSync,
   MdDelete,
+  // MdTextSnippet,
 } from "react-icons/md";
+
+import {
+  BsInputCursorText,
+  BsCardChecklist,
+  BsTextareaResize,
+} from "react-icons/bs";
+
+import { RiCheckboxLine } from "react-icons/ri";
+
+import { BiCalendar, BiDirections, BiSend } from "react-icons/bi";
+
+import { TbNumbers } from "react-icons/tb";
+
+import { CgListTree } from "react-icons/cg";
 
 import { ResizableBox } from "react-resizable";
 
@@ -45,6 +60,8 @@ import {
   IconNoDoc,
   FormContainer,
   HeaderForm,
+  Campo,
+  HeaderComponents,
   TitleForm,
   BodyFormComponents,
   FooterFormComponents,
@@ -84,6 +101,8 @@ export default class Base extends Component {
         styles: {
           height: 40,
           width: 200,
+          left: 0,
+          top: 0,
         },
         placeholder: "",
         name: "",
@@ -99,6 +118,8 @@ export default class Base extends Component {
         styles: {
           height: 40,
           width: 200,
+          left: 0,
+          top: 0,
         },
         placeholder: "",
         name: "",
@@ -113,6 +134,8 @@ export default class Base extends Component {
         styles: {
           height: 40,
           width: 200,
+          left: 0,
+          top: 0,
         },
         placeholder: "",
         name: "",
@@ -128,6 +151,8 @@ export default class Base extends Component {
         styles: {
           height: 40,
           width: 200,
+          left: 0,
+          top: 0,
         },
         placeholder: "",
         name: "",
@@ -136,7 +161,7 @@ export default class Base extends Component {
     titleForm: "",
     activeDrags: 0,
 
-    deltaPosition: {
+    defaultPosition: {
       x: 0,
       y: 0,
     },
@@ -474,10 +499,10 @@ export default class Base extends Component {
   };
 
   handleDrag = (e, ui) => {
-    const { x, y } = this.state.deltaPosition;
+    const { x, y } = this.state.defaultPosition;
     const { idComponentForm, formdata } = this.state;
     this.setState({
-      deltaPosition: {
+      defaultPosition: {
         x: x + ui.deltaX,
         y: y + ui.deltaY,
       },
@@ -491,6 +516,19 @@ export default class Base extends Component {
           : el
       ),
     });
+
+    if (idComponentForm) {
+      this.setState({
+        formdata: formdata.map((el) =>
+          el.id === idComponentForm
+            ? {
+                ...el,
+                styles: { ...el.styles, left: x, top: y },
+              }
+            : el
+        ),
+      });
+    }
 
     console.log(formdata);
   };
@@ -936,6 +974,41 @@ export default class Base extends Component {
                       <MdClose size={20} color="#333" />
                     </ButtonClose>
                   </HeaderForm>
+                  <HeaderComponents>
+                    <Campo>
+                      <span>Texto</span> <BsInputCursorText size={20} />
+                    </Campo>
+                    <Campo>
+                      <span>Numérico</span> <TbNumbers size={20} />
+                    </Campo>
+                    <Campo>
+                      <span>Seleção</span> <BsCardChecklist size={20} />
+                    </Campo>
+                    <Campo>
+                      <span>Área de texto</span> <BsTextareaResize size={20} />
+                    </Campo>
+                    <Campo>
+                      <span>Campo de data </span>
+                      <BiCalendar size={20} />
+                    </Campo>
+
+                    <Campo>
+                      <span>Checkbox</span>
+                      <RiCheckboxLine size={20} />
+                    </Campo>
+                    <Campo>
+                      <span>Relacionar</span>
+                      <CgListTree size={20} />
+                    </Campo>
+                    <Campo>
+                      <span>Lista relacionada</span>
+                      <BiDirections size={20} />
+                    </Campo>
+                    <Campo>
+                      <span>Enviar</span>
+                      <BiSend size={20} />
+                    </Campo>
+                  </HeaderComponents>
 
                   <BodyFormComponents>
                     <div id="content">
@@ -951,13 +1024,19 @@ export default class Base extends Component {
                           grid={[5, 5]}
                           // scale={1}
                           onStart={() =>
-                            this.setState({ idComponentForm: el.id })
+                            this.setState({
+                              idComponentForm: el.id,
+                              defaultPosition: {
+                                x: el.styles.left,
+                                y: el.styles.top,
+                              },
+                            })
                           }
                           onDrag={this.handleDrag}
-                          onStop={async () => {
-                            await this.setState({
+                          onStop={() => {
+                            this.setState({
                               idComponentForm: "",
-                              deltaPosition: {
+                              defaultPosition: {
                                 x: 0,
                                 y: 0,
                               },
@@ -1086,6 +1165,7 @@ export default class Base extends Component {
                                   </AddItem>
                                 </>
                               )}
+
                               <Delete>
                                 <MdDelete size={15} color="red" />
                               </Delete>

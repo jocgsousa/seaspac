@@ -323,6 +323,36 @@ export const HeaderForm = styled.div`
   border-bottom: 1px solid #ccc;
 `;
 
+export const Campo = styled.button.attrs({
+  type: "button",
+})`
+  min-width: 120px;
+  min-height: 30px;
+  padding-left: 4px;
+  padding-right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #3399cc;
+  border: none;
+  color: white;
+  margin-right: 5px;
+  span {
+    margin-right: 4px;
+  }
+`;
+
+export const HeaderComponents = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 5%;
+  padding-left: 5px;
+  border-bottom: 1px solid #ccc;
+`;
+
 export const TitleForm = styled.h4`
   white-space: nowrap;
   width: 70%;
