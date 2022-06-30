@@ -409,8 +409,19 @@ export const Element = styled.div`
   min-height: 40px;
   display: flex;
   width: 250px;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: center;
+  justify-content: flex-start;
 
+  button {
+    position: relative;
+    left: 5%;
+    margin-top: 5%;
+  }
+  span {
+    position: absolute;
+    top: -20px;
+  }
   input,
   select,
   textarea {
@@ -418,10 +429,8 @@ export const Element = styled.div`
     max-width: 500px;
     min-width: ${(props) =>
       props.styles.width ? `${props.styles.width}px` : "250px"};
-
     min-height: ${(props) =>
       props.styles.height ? `${props.styles.height}px` : "250px"};
-
     cursor: move;
   }
 `;
@@ -486,4 +495,69 @@ export const Delete = styled.button.attrs({
   align-items: center;
   justify-content: center;
   cursor: pointer;
+`;
+
+export const BoxFormAddCampo = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999999999999999999999999999999999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+`;
+
+export const FormAddCampo = styled.form`
+  position: absolute;
+  margin-top: -140px;
+  min-height: 200px;
+  width: 400px;
+  background-color: #fff;
+  border: none;
+  border-radius: 4px;
+`;
+
+export const HeaderAddCampo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  border-bottom: 1px solid #ccc;
+
+  span {
+    margin-left: 20px;
+  }
+`;
+
+export const BodyAddCampo = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  input,
+  button {
+    min-width: 90%;
+    min-height: 30px;
+    margin-top: 10px;
+  }
+`;
+
+export const FooterAddCampo = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  input,
+  button {
+    min-width: 90%;
+    min-height: 30px;
+    margin-top: 10px;
+  }
+
+  button {
+    cursor: pointer;
+  }
 `;

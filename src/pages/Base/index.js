@@ -29,10 +29,15 @@ import { CgListTree } from "react-icons/cg";
 import { ResizableBox } from "react-resizable";
 
 import { uniqueId } from "lodash";
+
 import { ClassicSpinner } from "react-spinners-kit";
+
 import axios from "axios";
+
 import { toast } from "react-toastify";
+
 import Draggable from "react-draggable";
+
 import {
   Container,
   Row,
@@ -71,6 +76,11 @@ import {
   ButtonSaveItem,
   Delete,
   Element,
+  BoxFormAddCampo,
+  FormAddCampo,
+  HeaderAddCampo,
+  BodyAddCampo,
+  FooterAddCampo,
 } from "./styles";
 
 import "./styles.css";
@@ -165,6 +175,7 @@ export default class Base extends Component {
       x: 0,
       y: 0,
     },
+    addCampo: true,
   };
 
   componentDidMount() {
@@ -556,6 +567,24 @@ export default class Base extends Component {
     console.log(formdata);
   };
 
+  handleRemoveCampo = (id) => {
+    const { formdata } = this.state;
+
+    this.setState({
+      formdata: formdata.filter((campo) => Number(campo.id) !== Number(id)),
+    });
+  };
+
+  handleSaveCampo = (e) => {
+    e.preventDefault();
+    const { formdata, campo } = this.state;
+
+    this.setState({
+      formdata: [...formdata, campo],
+      addCampo: false,
+    });
+  };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
     // const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
@@ -572,10 +601,97 @@ export default class Base extends Component {
       formdata,
       nameItem,
       valorItem,
+      addCampo,
+      campo,
     } = this.state;
 
     return (
       <Container>
+        {addCampo && (
+          <BoxFormAddCampo>
+            <FormAddCampo onSubmit={this.handleSaveCampo}>
+              <HeaderAddCampo>
+                <span>Adicionar campo</span>
+                <ButtonClose
+                  onClick={() => {
+                    this.setState({
+                      addCampo: false,
+                      campo: "",
+                    });
+                  }}
+                >
+                  <MdClose size={20} color="#333" />
+                </ButtonClose>
+              </HeaderAddCampo>
+              <BodyAddCampo>
+                {campo && campo.element === "input" && (
+                  <>
+                    <input
+                      required
+                      type="text"
+                      placeholder="Título"
+                      onChange={(e) => {
+                        this.setState({
+                          campo: {
+                            ...campo,
+                            title: e.target.value,
+                          },
+                        });
+                      }}
+                      value={campo.title}
+                    />
+                    <input
+                      required
+                      type="text"
+                      placeholder="Nome do placeholder"
+                      onChange={(e) => {
+                        this.setState({
+                          campo: {
+                            ...campo,
+                            placeholder: e.target.value,
+                          },
+                        });
+                      }}
+                      value={campo.placeholder}
+                    />
+                    <input
+                      required
+                      type="text"
+                      placeholder="Nome para o dado"
+                      onChange={(e) => {
+                        this.setState({
+                          campo: {
+                            ...campo,
+                            name: e.target.value,
+                          },
+                        });
+                      }}
+                      value={campo.name}
+                    />
+                    <input
+                      required
+                      type="text"
+                      placeholder="Valor padrão"
+                      onChange={(e) => {
+                        this.setState({
+                          campo: {
+                            ...campo,
+                            defaultValue: e.target.value,
+                          },
+                        });
+                      }}
+                      value={campo.defaultValue}
+                    />
+                  </>
+                )}
+              </BodyAddCampo>
+              <FooterAddCampo>
+                <ButtonSaveItem>Salvar</ButtonSaveItem>
+              </FooterAddCampo>
+            </FormAddCampo>
+          </BoxFormAddCampo>
+        )}
+
         <Row flexDirection="row">
           <Col
             size={2}
@@ -975,13 +1091,82 @@ export default class Base extends Component {
                     </ButtonClose>
                   </HeaderForm>
                   <HeaderComponents>
-                    <Campo>
+                    <Campo
+                      onClick={() =>
+                        this.setState({
+                          addCampo: true,
+                          campo: {
+                            id: uniqueId(),
+                            type: "text",
+                            element: "input",
+                            children: [],
+                            value: "",
+                            defaultValue: "",
+                            styles: {
+                              height: 40,
+                              width: 200,
+                              left: 0,
+                              top: 0,
+                            },
+                            placeholder: "",
+                            name: "",
+                            title: "",
+                          },
+                        })
+                      }
+                    >
                       <span>Texto</span> <BsInputCursorText size={20} />
                     </Campo>
-                    <Campo>
+                    <Campo
+                      onClick={() =>
+                        this.setState({
+                          addCampo: true,
+                          campo: {
+                            id: uniqueId(),
+                            type: "number",
+                            element: "input",
+                            children: [],
+                            value: "",
+                            defaultValue: "",
+                            styles: {
+                              height: 40,
+                              width: 200,
+                              left: 0,
+                              top: 0,
+                            },
+                            placeholder: "",
+                            name: "",
+                            title: "",
+                          },
+                        })
+                      }
+                    >
                       <span>Numérico</span> <TbNumbers size={20} />
                     </Campo>
-                    <Campo>
+                    <Campo
+                      onClick={() =>
+                        this.setState({
+                          addCampo: true,
+                          campo: {
+                            id: uniqueId(),
+                            type: "select",
+                            element: "select",
+                            children: [],
+                            value: "",
+                            defaultValue: "",
+                            styles: {
+                              height: 40,
+                              width: 200,
+                              left: 0,
+                              top: 0,
+                            },
+                            placeholder: "",
+                            name: "",
+                            title: "",
+                          },
+                        })
+                      }
+                    >
                       <span>Seleção</span> <BsCardChecklist size={20} />
                     </Campo>
                     <Campo>
@@ -1058,11 +1243,12 @@ export default class Base extends Component {
                               className="element"
                               styles={el.styles}
                             >
+                              <span>{el.title}</span>
                               {el.element === "input" && (
                                 <input
                                   id={`formElement${el}`}
                                   type={el.type}
-                                  placeholder={`${el.type}`}
+                                  placeholder={`${el.placeholder}`}
                                   value={el.value}
                                   defaultValue={el.defaultValue}
                                   onChange={(e) => {
@@ -1166,7 +1352,9 @@ export default class Base extends Component {
                                 </>
                               )}
 
-                              <Delete>
+                              <Delete
+                                onClick={() => this.handleRemoveCampo(el.id)}
+                              >
                                 <MdDelete size={15} color="red" />
                               </Delete>
                             </Element>
