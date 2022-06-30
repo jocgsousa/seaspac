@@ -413,12 +413,12 @@ export const Element = styled.div`
   flex-direction: center;
   justify-content: flex-start;
 
-  button {
+  #delete {
     position: relative;
     left: 5%;
     margin-top: 5%;
   }
-  span {
+  #span {
     position: absolute;
     top: -20px;
   }

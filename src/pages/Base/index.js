@@ -624,7 +624,7 @@ export default class Base extends Component {
                 </ButtonClose>
               </HeaderAddCampo>
               <BodyAddCampo>
-                {campo && campo.element === "input" && (
+                {campo && (
                   <>
                     <input
                       required
@@ -669,7 +669,6 @@ export default class Base extends Component {
                       value={campo.name}
                     />
                     <input
-                      required
                       type="text"
                       placeholder="Valor padrão"
                       onChange={(e) => {
@@ -1243,7 +1242,7 @@ export default class Base extends Component {
                               className="element"
                               styles={el.styles}
                             >
-                              <span>{el.title}</span>
+                              <span id="span">{el.title}</span>
                               {el.element === "input" && (
                                 <input
                                   id={`formElement${el}`}
@@ -1345,14 +1344,13 @@ export default class Base extends Component {
                                       value={valorItem}
                                     />
 
-                                    <ButtonSaveItem>
-                                      <span>Adicionar</span>
-                                    </ButtonSaveItem>
+                                    <ButtonSaveItem>Adicionar</ButtonSaveItem>
                                   </AddItem>
                                 </>
                               )}
 
                               <Delete
+                                id="delete"
                                 onClick={() => this.handleRemoveCampo(el.id)}
                               >
                                 <MdDelete size={15} color="red" />
