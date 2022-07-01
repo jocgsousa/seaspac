@@ -446,14 +446,13 @@ export const CheckBox = styled.div`
     padding: 1px;
     position: relative;
   }
-  border: 2px solid red;
+  /* border: 2px solid red; */
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   label {
-    border: 1px solid red;
-    min-width: 200px;
+    white-space: nowrap;
   }
 `;
 
