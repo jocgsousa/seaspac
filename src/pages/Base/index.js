@@ -81,6 +81,7 @@ import {
   HeaderAddCampo,
   BodyAddCampo,
   FooterAddCampo,
+  CheckBox,
 } from "./styles";
 
 import "./styles.css";
@@ -175,7 +176,7 @@ export default class Base extends Component {
       x: 0,
       y: 0,
     },
-    addCampo: true,
+    addCampo: false,
   };
 
   componentDidMount() {
@@ -681,6 +682,20 @@ export default class Base extends Component {
                       }}
                       value={campo.defaultValue}
                     />
+
+                    <input
+                      type="text"
+                      placeholder="Valor"
+                      onChange={(e) => {
+                        this.setState({
+                          campo: {
+                            ...campo,
+                            value: e.target.value,
+                          },
+                        });
+                      }}
+                      value={campo.value}
+                    />
                   </>
                 )}
               </BodyAddCampo>
@@ -1168,15 +1183,84 @@ export default class Base extends Component {
                     >
                       <span>Seleção</span> <BsCardChecklist size={20} />
                     </Campo>
-                    <Campo>
+                    <Campo
+                      onClick={() =>
+                        this.setState({
+                          addCampo: true,
+                          campo: {
+                            id: uniqueId(),
+                            type: "textarea",
+                            element: "textarea",
+                            children: [],
+                            value: "",
+                            defaultValue: "",
+                            styles: {
+                              height: 40,
+                              width: 200,
+                              left: 0,
+                              top: 0,
+                            },
+                            placeholder: "",
+                            name: "",
+                            title: "",
+                          },
+                        })
+                      }
+                    >
                       <span>Área de texto</span> <BsTextareaResize size={20} />
                     </Campo>
-                    <Campo>
+                    <Campo
+                      onClick={() =>
+                        this.setState({
+                          addCampo: true,
+                          campo: {
+                            id: uniqueId(),
+                            type: "date",
+                            element: "input",
+                            children: [],
+                            value: "",
+                            defaultValue: "",
+                            styles: {
+                              height: 40,
+                              width: 200,
+                              left: 0,
+                              top: 0,
+                            },
+                            placeholder: "",
+                            name: "",
+                            title: "",
+                          },
+                        })
+                      }
+                    >
                       <span>Campo de data </span>
                       <BiCalendar size={20} />
                     </Campo>
 
-                    <Campo>
+                    <Campo
+                      onClick={() =>
+                        this.setState({
+                          addCampo: true,
+                          campo: {
+                            id: uniqueId(),
+                            type: "checkbox",
+                            element: "input",
+                            children: [],
+                            value: "",
+                            defaultValue: "",
+                            styles: {
+                              height: 40,
+                              width: 20,
+                              left: 0,
+                              top: 0,
+                            },
+                            placeholder: "",
+                            name: "",
+                            title: "",
+                          },
+                        })
+                      }
+                    >
                       <span>Checkbox</span>
                       <RiCheckboxLine size={20} />
                     </Campo>
@@ -1242,25 +1326,28 @@ export default class Base extends Component {
                               className="element"
                               styles={el.styles}
                             >
-                              <span id="span">{el.title}</span>
-                              {el.element === "input" && (
-                                <input
-                                  id={`formElement${el}`}
-                                  type={el.type}
-                                  placeholder={`${el.placeholder}`}
-                                  value={el.value}
-                                  defaultValue={el.defaultValue}
-                                  onChange={(e) => {
-                                    this.setState({
-                                      formdata: formdata.map((c) =>
-                                        c.id === el.id
-                                          ? { ...c, value: e.target.value }
-                                          : c
-                                      ),
-                                    });
-                                  }}
-                                />
+                              {el.type !== "checkbox" && (
+                                <span id="span">{el.title}</span>
                               )}
+                              {el.element === "input" &&
+                                el.type !== "checkbox" && (
+                                  <input
+                                    id={`formElement${el}`}
+                                    type={el.type}
+                                    placeholder={`${el.placeholder}`}
+                                    value={el.value}
+                                    defaultValue={el.defaultValue}
+                                    onChange={(e) => {
+                                      this.setState({
+                                        formdata: formdata.map((c) =>
+                                          c.id === el.id
+                                            ? { ...c, value: e.target.value }
+                                            : c
+                                        ),
+                                      });
+                                    }}
+                                  />
+                                )}
                               {el.element === "select" && (
                                 <>
                                   <select
@@ -1348,6 +1435,50 @@ export default class Base extends Component {
                                   </AddItem>
                                 </>
                               )}
+                              {el.element === "textarea" && (
+                                <>
+                                  <textarea
+                                    id={`formElement${el}`}
+                                    type={el.type}
+                                    placeholder={`${el.placeholder}`}
+                                    value={el.value}
+                                    defaultValue={el.defaultValue}
+                                    onChange={(e) => {
+                                      this.setState({
+                                        formdata: formdata.map((c) =>
+                                          c.id === el.id
+                                            ? { ...c, value: e.target.value }
+                                            : c
+                                        ),
+                                      });
+                                    }}
+                                  >
+                                    {el.defaultValue}
+                                  </textarea>
+                                </>
+                              )}
+                              {el.element === "input" &&
+                                el.type === "checkbox" && (
+                                  <CheckBox>
+                                    <input
+                                      id={`formElement${el}`}
+                                      type={el.type}
+                                      placeholder={`${el.placeholder}`}
+                                      value={el.value}
+                                      defaultValue={el.defaultValue}
+                                      onChange={(e) => {
+                                        this.setState({
+                                          formdata: formdata.map((c) =>
+                                            c.id === el.id
+                                              ? { ...c, value: e.target.value }
+                                              : c
+                                          ),
+                                        });
+                                      }}
+                                    />
+                                    <label>{el.title}</label>
+                                  </CheckBox>
+                                )}
 
                               <Delete
                                 id="delete"

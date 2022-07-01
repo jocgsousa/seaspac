@@ -435,6 +435,28 @@ export const Element = styled.div`
   }
 `;
 
+export const CheckBox = styled.div`
+  input[type="checkbox"] {
+    /* Double-sized Checkboxes */
+    -ms-transform: scale(0.4); /* IE */
+    -moz-transform: scale(0.4); /* FF */
+    -webkit-transform: scale(0.4); /* Safari and Chrome */
+    -o-transform: scale(0.4); /* Opera */
+    transform: scale(0.4);
+    padding: 1px;
+    position: relative;
+  }
+  border: 2px solid red;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  label {
+    border: 1px solid red;
+    min-width: 200px;
+  }
+`;
+
 export const FooterFormComponents = styled.div`
   display: flex;
   align-items: center;
