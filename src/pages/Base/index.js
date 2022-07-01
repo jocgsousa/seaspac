@@ -82,6 +82,12 @@ import {
   BodyAddCampo,
   FooterAddCampo,
   CheckBox,
+  BoxRelacionar,
+  FormRelacionar,
+  HeaderRelacionar,
+  BodyRelacionar,
+  FooterRelacionar,
+  ButtonSaveRelacionar,
 } from "./styles";
 
 import "./styles.css";
@@ -177,6 +183,7 @@ export default class Base extends Component {
       y: 0,
     },
     addCampo: false,
+    relacionar: false,
   };
 
   componentDidMount() {
@@ -604,6 +611,7 @@ export default class Base extends Component {
       valorItem,
       addCampo,
       campo,
+      relacionar,
     } = this.state;
 
     return (
@@ -704,6 +712,27 @@ export default class Base extends Component {
               </FooterAddCampo>
             </FormAddCampo>
           </BoxFormAddCampo>
+        )}
+
+        {relacionar && (
+          <BoxRelacionar>
+            <FormRelacionar>
+              <HeaderRelacionar>
+                <h2>Relacionar</h2>
+                <Close>
+                  <MdClose size={20} color="#333" />
+                </Close>
+              </HeaderRelacionar>
+              <BodyRelacionar>
+                <h2>Corpo</h2>
+              </BodyRelacionar>
+              <FooterRelacionar>
+                <ButtonSaveRelacionar>
+                  <span>Salvar</span>
+                </ButtonSaveRelacionar>
+              </FooterRelacionar>
+            </FormRelacionar>
+          </BoxRelacionar>
         )}
 
         <Row flexDirection="row">

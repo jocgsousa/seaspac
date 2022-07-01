@@ -582,3 +582,15 @@ export const FooterAddCampo = styled.div`
     cursor: pointer;
   }
 `;
+
+export const BoxRelacionar = styled.div``;
+
+export const FormRelacionar = styled.div``;
+
+export const HeaderRelacionar = styled.div``;
+
+export const BodyRelacionar = styled.div``;
+
+export const FooterRelacionar = styled.div``;
+
+export const ButtonSaveRelacionar = styled.div``;
