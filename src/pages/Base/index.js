@@ -9,6 +9,8 @@ import {
   MdAdd,
   MdSync,
   MdDelete,
+  MdCheckCircle,
+  MdModeEdit,
   // MdTextSnippet,
 } from "react-icons/md";
 
@@ -85,9 +87,15 @@ import {
   BoxRelacionar,
   FormRelacionar,
   HeaderRelacionar,
+  HeaderFormPrincipal,
   BodyRelacionar,
   FooterRelacionar,
   ButtonSaveRelacionar,
+  FormPrincipal,
+  ListFormularios,
+  FormRelacionarItem,
+  ColRelacionar,
+  BodyFormPrincipal,
 } from "./styles";
 
 import "./styles.css";
@@ -184,6 +192,7 @@ export default class Base extends Component {
     },
     addCampo: false,
     relacionar: false,
+    forms: [],
   };
 
   componentDidMount() {
@@ -593,6 +602,53 @@ export default class Base extends Component {
     });
   };
 
+  handleListForms = () => {
+    const { id, idSection, sections, idForm } = this.state;
+
+    const dep = sections.find((dep) => dep.id === id);
+
+    const sec = dep.secoes.filter((sec) => sec.id === idSection);
+
+    const forms = sec[0].formularios;
+
+    const relacionais = forms.filter((form) => form.id !== idForm);
+
+    this.setState({
+      forms: relacionais,
+    });
+  };
+
+  handleAddSuperForm = async (isForm, isSuper) => {
+    const { id, idForm, idSection } = this.state;
+
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+
+    const api = JSON.parse(localStorage.getItem("api"));
+
+    const data = {
+      fk_dep_id: id,
+      fk_super_id: isSuper ? null : idForm,
+      fk_section_id: idSection,
+    };
+
+    await axios
+      .put(`${api.api}/form/${isForm}`, data, {
+        headers: {
+          Authorization: `Bearer ${credentials.token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        this.handleListDeps();
+        setTimeout(() => {
+          this.handleListForms();
+        }, 100);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
     // const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
@@ -612,6 +668,8 @@ export default class Base extends Component {
       addCampo,
       campo,
       relacionar,
+      forms,
+      idForm,
     } = this.state;
 
     return (
@@ -718,13 +776,46 @@ export default class Base extends Component {
           <BoxRelacionar>
             <FormRelacionar>
               <HeaderRelacionar>
-                <h2>Relacionar</h2>
-                <Close>
+                <span>Relacionar</span>
+                <ButtonClose
+                  onClick={() => {
+                    this.setState({
+                      relacionar: false,
+                    });
+                  }}
+                >
                   <MdClose size={20} color="#333" />
-                </Close>
+                </ButtonClose>
               </HeaderRelacionar>
               <BodyRelacionar>
-                <h2>Corpo</h2>
+                <ColRelacionar size={4}>
+                  <FormPrincipal>
+                    <HeaderFormPrincipal>
+                      <span>{titleForm}</span>
+                    </HeaderFormPrincipal>
+                    <BodyFormPrincipal>
+                      <span>{formdata.length} COMPONENTES</span>
+                    </BodyFormPrincipal>
+                  </FormPrincipal>
+                </ColRelacionar>
+
+                <ColRelacionar size={9}>
+                  <ListFormularios>
+                    {forms.map((form) => (
+                      <FormRelacionarItem
+                        isSelected={idForm === form.fk_super_id}
+                        onClickCapture={() =>
+                          this.handleAddSuperForm(form.id, form.fk_super_id)
+                        }
+                      >
+                        <span>{form.title}</span>
+                        {idForm === form.fk_super_id && (
+                          <MdCheckCircle size={25} color="#00cc66" />
+                        )}
+                      </FormRelacionarItem>
+                    ))}
+                  </ListFormularios>
+                </ColRelacionar>
               </BodyRelacionar>
               <FooterRelacionar>
                 <ButtonSaveRelacionar>
@@ -773,7 +864,7 @@ export default class Base extends Component {
                 <Op
                   style={{
                     position: "relative",
-                    left: "-20px",
+                    left: "4px",
                   }}
                 >
                   {loading ? (
@@ -870,6 +961,10 @@ export default class Base extends Component {
                           onClick={() => this.handleHideSection(index)}
                         >
                           <MdArrowDropUp size={15} />
+                        </Op>
+
+                        <Op>
+                          <MdModeEdit size={15} />
                         </Op>
                       </DivOp>
                     </Dep>
@@ -1026,6 +1121,10 @@ export default class Base extends Component {
                                 >
                                   <MdArrowDropUp size={15} />
                                 </Op>
+
+                                <Op>
+                                  <MdModeEdit size={15} />
+                                </Op>
                               </DivOp>
                             </Section>
                             <ListForms
@@ -1094,7 +1193,12 @@ export default class Base extends Component {
                                     <Line width={0.5} height={35} top={-35} />
                                     <Line width={40} height={0.5} />
                                     <FcDocument size={20} />
+
                                     <span>{form.title}</span>
+
+                                    <Op>
+                                      <MdModeEdit size={15} />
+                                    </Op>
                                   </Form>
                                 ))}
                             </ListForms>
@@ -1293,7 +1397,14 @@ export default class Base extends Component {
                       <span>Checkbox</span>
                       <RiCheckboxLine size={20} />
                     </Campo>
-                    <Campo>
+                    <Campo
+                      onClick={() => {
+                        this.handleListForms();
+                        this.setState({
+                          relacionar: true,
+                        });
+                      }}
+                    >
                       <span>Relacionar</span>
                       <CgListTree size={20} />
                     </Campo>

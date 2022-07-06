@@ -135,7 +135,7 @@ export const Save = styled.button`
 `;
 
 export const DivOp = styled.div`
-  right: -80px;
+  right: -60px;
   display: flex;
   flex-direction: row;
   position: relative;
@@ -583,14 +583,127 @@ export const FooterAddCampo = styled.div`
   }
 `;
 
-export const BoxRelacionar = styled.div``;
+export const BoxRelacionar = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999999999999999999999999999999999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+`;
 
-export const FormRelacionar = styled.div``;
+export const FormRelacionar = styled.div`
+  position: absolute;
+  /* margin-top: -140px; */
+  min-height: 90vh;
+  min-width: 90vw;
+  background-color: #fff;
+  border: none;
+  border-radius: 4px;
+`;
 
-export const HeaderRelacionar = styled.div``;
+export const HeaderRelacionar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  border-bottom: 1px solid #ccc;
 
-export const BodyRelacionar = styled.div``;
+  span {
+    margin-left: 20px;
+  }
+`;
 
-export const FooterRelacionar = styled.div``;
+export const HeaderFormPrincipal = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  border-bottom: 1px solid #ccc;
+  min-width: 100%;
+`;
 
-export const ButtonSaveRelacionar = styled.div``;
+export const BodyRelacionar = styled.div`
+  height: 81vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+`;
+
+export const FooterRelacionar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 20px;
+  height: 30px;
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+  padding-top: 10px;
+  button {
+    cursor: pointer;
+    min-height: 30px;
+    min-width: 100px;
+  }
+`;
+
+export const ButtonSaveRelacionar = styled.button.attrs({
+  type: "button",
+})``;
+
+export const ColRelacionar = styled.div`
+  flex: ${(props) => props.size};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const FormPrincipal = styled.div`
+  min-width: 90%;
+  min-height: 150px;
+  border-radius: 10px;
+  background-color: #eee;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 10px;
+  flex-direction: column;
+`;
+
+export const BodyFormPrincipal = styled.div`
+  width: 100%;
+  min-height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ListFormularios = styled.ul`
+  min-width: 90%;
+  min-height: 60vh;
+  max-height: 60vh;
+  overflow: auto;
+`;
+
+export const FormRelacionarItem = styled.li`
+  min-width: 100%;
+  min-height: 100px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.2s all;
+  background-color: ${(props) => (props.isSelected ? "#b8e2f8" : "")};
+  &:hover {
+    background-color: ${(props) => (props.isSelected ? "#964141" : "#b8e2f8")};
+  }
+`;
