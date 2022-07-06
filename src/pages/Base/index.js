@@ -191,6 +191,8 @@ export default class Base extends Component {
       y: 0,
     },
     addCampo: false,
+    update: false,
+    titleUpdate: "",
     relacionar: false,
     forms: [],
   };
@@ -670,10 +672,48 @@ export default class Base extends Component {
       relacionar,
       forms,
       idForm,
+      update,
+      titleUpdate,
     } = this.state;
 
     return (
       <Container>
+        {update && (
+          <BoxFormAddCampo>
+            <FormAddCampo onSubmit={this.handleSaveCampo}>
+              <HeaderAddCampo>
+                <span>Atualizar</span>
+                <ButtonClose
+                  onClick={() => {
+                    this.setState({
+                      update: false,
+                      titleUpdate: "",
+                    });
+                  }}
+                >
+                  <MdClose size={20} color="#333" />
+                </ButtonClose>
+              </HeaderAddCampo>
+              <BodyAddCampo>
+                <input
+                  required
+                  type="text"
+                  placeholder="Título"
+                  onChange={(e) => {
+                    this.setState({
+                      titleUpdate: e.target.value,
+                    });
+                  }}
+                  value={titleUpdate}
+                />
+              </BodyAddCampo>
+              <FooterAddCampo>
+                <ButtonSaveItem>Salvar</ButtonSaveItem>
+              </FooterAddCampo>
+            </FormAddCampo>
+          </BoxFormAddCampo>
+        )}
+
         {addCampo && (
           <BoxFormAddCampo>
             <FormAddCampo onSubmit={this.handleSaveCampo}>
@@ -963,7 +1003,13 @@ export default class Base extends Component {
                           <MdArrowDropUp size={15} />
                         </Op>
 
-                        <Op>
+                        <Op
+                          onClick={() => {
+                            this.setState({
+                              update: true,
+                            });
+                          }}
+                        >
                           <MdModeEdit size={15} />
                         </Op>
                       </DivOp>
