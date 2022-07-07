@@ -192,7 +192,6 @@ export default class Base extends Component {
     },
     addCampo: false,
     update: false,
-    titleUpdate: "",
     relacionar: false,
     forms: [],
   };
@@ -220,6 +219,16 @@ export default class Base extends Component {
       })
       .catch((error) => {
         console.log(error);
+        const { page } = this.props;
+        if (error.response && error.response.data.token === false) {
+          page({
+            login: true,
+            home: false,
+            config: false,
+            base: false,
+          });
+        }
+
         toast.warn("Falha ao recuperar informações!", {
           position: "bottom-left",
           autoClose: 5000,
@@ -559,14 +568,10 @@ export default class Base extends Component {
         ),
       });
     }
-
-    console.log(formdata);
   };
 
   onResize = (event, { element, size, handle }) => {
     const { idComponentForm, formdata } = this.state;
-    console.log("id: " + idComponentForm);
-    console.log(size.width);
 
     this.setState({
       formdata: formdata.map((el) =>
@@ -582,8 +587,6 @@ export default class Base extends Component {
           : el
       ),
     });
-
-    console.log(formdata);
   };
 
   handleRemoveCampo = (id) => {
@@ -651,6 +654,174 @@ export default class Base extends Component {
       });
   };
 
+  handleUpdateEstruct = async (e) => {
+    e.preventDefault();
+    const { update } = this.state;
+
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    const api = JSON.parse(localStorage.getItem("api"));
+
+    if (update.type === "dep") {
+      const data = {
+        name: update.title,
+      };
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${credentials.token}`,
+        },
+      };
+      await axios
+        .put(`${api.api}/departamento/${update.data.id}`, data, config)
+        .then((response) => {
+          toast.success(response.data.message, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+
+          this.setState({
+            loading: false,
+            firstLoading: false,
+            update: "",
+          });
+          this.handleListDeps();
+        })
+        .catch((error) => {
+          console.log(error);
+
+          toast.warn("Falha ao recuperar informações!", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+
+          this.setState({
+            loading: false,
+            firstLoading: false,
+          });
+        });
+    }
+
+    if (update.type === "section") {
+      const data = {
+        title: update.title,
+      };
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${credentials.token}`,
+        },
+      };
+      await axios
+        .put(`${api.api}/section/${update.data.id}`, data, config)
+        .then((response) => {
+          toast.success(response.data.message, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+
+          this.setState({
+            loading: false,
+            firstLoading: false,
+            update: "",
+          });
+          this.handleListDeps();
+        })
+        .catch((error) => {
+          console.log(error);
+
+          toast.warn("Falha ao atualizar informações!", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+
+          this.setState({
+            loading: false,
+            firstLoading: false,
+          });
+        });
+    }
+
+    if (update.type === "form") {
+      const data = {
+        title: update.title,
+        fk_section_id: update.data.fk_section_id,
+        fk_dep_id: update.data.fk_dep_id,
+      };
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${credentials.token}`,
+        },
+      };
+
+      await axios
+        .put(`${api.api}/form/${update.data.id}`, data, config)
+        .then((response) => {
+          toast.success(response.data.message, {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+
+          this.setState({
+            loading: false,
+            firstLoading: false,
+            update: "",
+            titleForm: response.data.formulario.title,
+          });
+          this.handleListDeps();
+        })
+        .catch((error) => {
+          console.log(error);
+
+          toast.warn("Falha ao atualizar informações!", {
+            position: "bottom-left",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+
+          this.setState({
+            loading: false,
+            firstLoading: false,
+          });
+        });
+    }
+  };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
     // const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
@@ -673,21 +844,19 @@ export default class Base extends Component {
       forms,
       idForm,
       update,
-      titleUpdate,
     } = this.state;
 
     return (
       <Container>
         {update && (
           <BoxFormAddCampo>
-            <FormAddCampo onSubmit={this.handleSaveCampo}>
+            <FormAddCampo onSubmit={this.handleUpdateEstruct}>
               <HeaderAddCampo>
                 <span>Atualizar</span>
                 <ButtonClose
                   onClick={() => {
                     this.setState({
-                      update: false,
-                      titleUpdate: "",
+                      update: "",
                     });
                   }}
                 >
@@ -701,10 +870,13 @@ export default class Base extends Component {
                   placeholder="Título"
                   onChange={(e) => {
                     this.setState({
-                      titleUpdate: e.target.value,
+                      update: {
+                        ...update,
+                        title: String(e.target.value).toUpperCase(),
+                      },
                     });
                   }}
-                  value={titleUpdate}
+                  value={update.title}
                 />
               </BodyAddCampo>
               <FooterAddCampo>
@@ -741,7 +913,7 @@ export default class Base extends Component {
                         this.setState({
                           campo: {
                             ...campo,
-                            title: e.target.value,
+                            title: String(e.target.value).toUpperCase(),
                           },
                         });
                       }}
@@ -1006,7 +1178,11 @@ export default class Base extends Component {
                         <Op
                           onClick={() => {
                             this.setState({
-                              update: true,
+                              update: {
+                                title: s.name,
+                                type: "dep",
+                                data: s,
+                              },
                             });
                           }}
                         >
@@ -1168,7 +1344,17 @@ export default class Base extends Component {
                                   <MdArrowDropUp size={15} />
                                 </Op>
 
-                                <Op>
+                                <Op
+                                  onClick={() => {
+                                    this.setState({
+                                      update: {
+                                        title: section.title,
+                                        type: "section",
+                                        data: section,
+                                      },
+                                    });
+                                  }}
+                                >
                                   <MdModeEdit size={15} />
                                 </Op>
                               </DivOp>
@@ -1242,7 +1428,17 @@ export default class Base extends Component {
 
                                     <span>{form.title}</span>
 
-                                    <Op>
+                                    <Op
+                                      onClick={() => {
+                                        this.setState({
+                                          update: {
+                                            title: form.title,
+                                            type: "form",
+                                            data: form,
+                                          },
+                                        });
+                                      }}
+                                    >
                                       <MdModeEdit size={15} />
                                     </Op>
                                   </Form>

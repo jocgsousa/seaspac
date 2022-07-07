@@ -250,7 +250,7 @@ export const Form = styled.div`
 
   span {
     white-space: nowrap;
-    width: 150px;
+    width: 210px;
     overflow: hidden;
     text-overflow: ellipsis;
 
@@ -308,8 +308,8 @@ export const ListComponents = styled.div`
 `;
 
 export const FormContainer = styled.div`
-  height: 95vh;
-  width: 95%;
+  height: 99vh;
+  width: 75vw;
   background: #ddd;
 `;
 
@@ -326,7 +326,7 @@ export const HeaderForm = styled.div`
 export const Campo = styled.button.attrs({
   type: "button",
 })`
-  min-width: 120px;
+  min-width: 150px;
   min-height: 30px;
   padding-left: 4px;
   padding-right: 4px;
@@ -348,9 +348,11 @@ export const HeaderComponents = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  height: 5%;
+  height: 8%;
   padding-left: 5px;
   border-bottom: 1px solid #ccc;
+  overflow-x: auto;
+  overflow-y: hidden;
 `;
 
 export const TitleForm = styled.h4`
@@ -380,7 +382,7 @@ export const ButtonClose = styled.button.attrs({
 `;
 
 export const BodyFormComponents = styled.div`
-  height: 85%;
+  height: 80%;
   width: 100%;
   position: relative;
 
@@ -462,7 +464,7 @@ export const FooterFormComponents = styled.div`
   justify-content: flex-end;
   padding-right: 15px;
   border-top: 1px solid #ccc;
-  height: 5%;
+  height: 8%;
 `;
 
 export const ButtonSaveFormComponents = styled.button.attrs({
