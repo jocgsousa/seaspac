@@ -123,6 +123,7 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
+        required: false,
         styles: {
           height: 40,
           width: 200,
@@ -140,6 +141,7 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
+        required: false,
         styles: {
           height: 40,
           width: 200,
@@ -156,6 +158,7 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
+        required: false,
         styles: {
           height: 40,
           width: 200,
@@ -173,6 +176,7 @@ export default class Base extends Component {
         children: [],
         value: "",
         defaultValue: "",
+        required: false,
         styles: {
           height: 40,
           width: 200,
@@ -822,6 +826,108 @@ export default class Base extends Component {
     }
   };
 
+  handleDeleteDep = async (id) => {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    const api = JSON.parse(localStorage.getItem("api"));
+    const config = {
+      headers: {
+        Authorization: `Bearer ${credentials.token}`,
+      },
+    };
+
+    await axios
+      .delete(`${api.api}/departamento/${id}`, config)
+      .then((response) => {
+        toast.success(response.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
+        this.setState({
+          loading: false,
+          firstLoading: false,
+          update: "",
+        });
+        this.handleListDeps();
+      })
+      .catch((error) => {
+        console.log(error);
+
+        toast.warn("Falha ao recuperar informações!", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+
+        this.setState({
+          loading: false,
+          firstLoading: false,
+        });
+      });
+  };
+
+  handleDeleteSection = async (id) => {
+    const credentials = JSON.parse(localStorage.getItem("credentials"));
+    const api = JSON.parse(localStorage.getItem("api"));
+    const config = {
+      headers: {
+        Authorization: `Bearer ${credentials.token}`,
+      },
+    };
+
+    await axios
+      .delete(`${api.api}/section/${id}`, config)
+      .then((response) => {
+        toast.success(response.data.message, {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+
+        this.setState({
+          loading: false,
+          firstLoading: false,
+          update: "",
+        });
+        this.handleListDeps();
+      })
+      .catch((error) => {
+        console.log(error);
+
+        toast.warn("Falha ao recuperar informações!", {
+          position: "bottom-left",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+
+        this.setState({
+          loading: false,
+          firstLoading: false,
+        });
+      });
+  };
+
   render() {
     document.title = "SEASPAC - HOMEBASE";
     // const dragHandlers = { onStart: this.onStart, onStop: this.onStop };
@@ -961,6 +1067,22 @@ export default class Base extends Component {
                       value={campo.defaultValue}
                     />
 
+                    <select
+                      onChange={(e) => {
+                        this.setState({
+                          campo: {
+                            ...campo,
+                            required: e.target.value,
+                          },
+                        });
+                      }}
+                      value={campo.required}
+                    >
+                      <option value="">Campo obrigatório?...</option>
+                      <option value={false}>NÃO</option>
+                      <option value={true}>SIM</option>
+                    </select>
+
                     <input
                       type="text"
                       placeholder="Valor"
@@ -1076,7 +1198,7 @@ export default class Base extends Component {
                 <Op
                   style={{
                     position: "relative",
-                    left: "4px",
+                    right: "-28px",
                   }}
                 >
                   {loading ? (
@@ -1187,6 +1309,10 @@ export default class Base extends Component {
                           }}
                         >
                           <MdModeEdit size={15} />
+                        </Op>
+
+                        <Op onClick={() => this.handleDeleteDep(s.id)}>
+                          <MdDelete size={15} />
                         </Op>
                       </DivOp>
                     </Dep>
@@ -1356,6 +1482,12 @@ export default class Base extends Component {
                                   }}
                                 >
                                   <MdModeEdit size={15} />
+                                </Op>
+
+                                <Op
+                                  onClick={() => this.handleDeleteSection(s.id)}
+                                >
+                                  <MdDelete size={15} />
                                 </Op>
                               </DivOp>
                             </Section>

@@ -135,7 +135,7 @@ export const Save = styled.button`
 `;
 
 export const DivOp = styled.div`
-  right: -60px;
+  right: -30px;
   display: flex;
   flex-direction: row;
   position: relative;
@@ -308,8 +308,8 @@ export const ListComponents = styled.div`
 `;
 
 export const FormContainer = styled.div`
-  height: 99vh;
-  width: 75vw;
+  height: 94vh;
+  width: 72vw;
   background: #ddd;
 `;
 
@@ -561,6 +561,7 @@ export const BodyAddCampo = styled.div`
   flex-direction: column;
 
   input,
+  select,
   button {
     min-width: 90%;
     min-height: 30px;
